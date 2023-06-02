@@ -5,11 +5,11 @@
         android:title="@string/home"
         android:icon="@drawable/ic_home" />
 
-    <item android:id="@+id/albumsFragment"
-        android:title="@string/albums"
-        android:icon="@drawable/ic_album" />
+<!--    <item android:id="@+id/albumsFragment"-->
+<!--        android:title="@string/albums"-->
+<!--        android:icon="@drawable/ic_album" />-->
 
-    <item android:id="@+id/songsFragment"
+    <item android:id="@+id/mainSongsFragment"
         android:title="@string/songs"
         android:icon="@drawable/ic_song" />
 

@@ -1,113 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/main_background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SongsFragment">
-
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="@color/primary_light"
-        android:backgroundTint="@color/primary_light">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/primary_light"
-            android:backgroundTint="@color/primary_light"
-            app:collapsedTitleTextColor="@color/white"
-            app:expandedTitleTextColor="@color/white"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
-
-
-<!--            <ImageView-->
-<!--                android:id="@+id/imgMealDetails"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                app:layout_collapseMode="parallax" />-->
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Songs"
-                android:textSize="22sp"
-                android:textColor="@color/text_main_dark"
-                android:gravity="center"
-                android:layout_marginTop="26dp"
-                />
-
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:layout_gravity="bottom"
-                android:background="@color/primary_light"
-                app:layout_collapseMode="pin">
-
-                <LinearLayout
-                    android:id="@+id/searchContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:id="@+id/etSearchBox"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:textSize="14sp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="center_vertical"
-                        android:drawableStart="@drawable/ic_search"
-                        android:drawableTint="#595959"
-                        android:layout_weight="1"
-                        android:background="@drawable/search_box_background"
-                        android:text=" Search Songs..."
-                        android:textColor="@color/text_secondary_light"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp" />
-
-
-                </LinearLayout>
-            </androidx.appcompat.widget.Toolbar>
-
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-    <!--    <com.google.android.material.search.SearchView-->
-    <!--        android:id="@+id/searchBox"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_margin="8dp"-->
-    <!--        android:text="Search Here..."-->
-    <!--        android:hint="Search Here..."-->
-    <!--        android:layout_height="50dp"/>-->
-
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    tools:context=".fragments.tabs.SongsFragment">
 
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
                 android:orientation="horizontal"
@@ -136,7 +39,5 @@
                 app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

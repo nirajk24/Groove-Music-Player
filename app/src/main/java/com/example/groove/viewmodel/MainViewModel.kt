@@ -21,10 +21,6 @@ class MainViewModel(
     private val application: Application
 ) : AndroidViewModel(application) {
 
-
-    private val allSongsLiveData: LiveData<List<Song>> = songRepository.getAllSongs()
-
-
     companion object {
         var sortOrder: Int = 0
         val sortingList = arrayOf(
@@ -33,17 +29,17 @@ class MainViewModel(
         )
     }
 
-//    private var allSongsLiveData = MutableLiveData<List<Song>>()
-
+    private val allSongsLiveData: LiveData<List<Song>> = songRepository.getAllSongs()
     fun observeAllSongsLiveData(): LiveData<List<Song>> {
         return allSongsLiveData
     }
 
 
+
+
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
     suspend fun scanForSongs(){
-        val tempList = ArrayList<Song>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -99,9 +95,10 @@ class MainViewModel(
     }
 
 
-//    fun getSongsFromRepository(){
-//        val songList : List<Song> = songRepository.getAllSongs()
-//        allSongsLiveData.postValue(songList)
 //    }
+
+    //                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
+//                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
+//                    val contentTypeC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE))
 
 }

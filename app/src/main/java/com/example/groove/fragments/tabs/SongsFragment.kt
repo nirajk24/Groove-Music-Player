@@ -1,6 +1,5 @@
-package com.example.groove.fragments
+package com.example.groove.fragments.tabs
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +18,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
     private lateinit var binding: FragmentSongsBinding
     private lateinit var mainViewModel: MainViewModel
 
+
     // Adapter
     private lateinit var songAdapter: SongAdapter
 
@@ -34,17 +34,15 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
     ): View {
         binding = FragmentSongsBinding.inflate(inflater, container, false)
 
-        prepareSongsRecyclerView()
-//        getAllSongsFromRepository()
-        observeSongs()
-
         return binding.root
     }
 
-    private fun getAllSongsFromRepository() {
-//        mainViewModel.getSongsFromRepository()
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        prepareSongsRecyclerView()
+        observeSongs()
+    }
 
     private fun prepareSongsRecyclerView() {
         songAdapter = SongAdapter()

@@ -9,9 +9,23 @@
         <item name="android:background">@color/background_dark</item>
     </style>
 
+    <style name="app_bar_layout_background_tint">
+        <item name="android:backgroundTint">@color/primary_dark</item>
+    </style>
+
+    <style name="collapsing_toolbar_layout_content_scrim">
+        <item name="contentScrim">@color/primary_dark</item>
+    </style>
+
+    <style name="tab_layout_style">
+        <item name="tabBackground">@color/background_dark</item>
+        <item name="tabTextColor">@color/accent_light</item>
+    </style>
+
+    <!--    Bottom Navigation Bar Icon, Text Color and Ripple-->
     <style name="bottom_navigation_bar">
         <item name="itemIconTint">@color/text_secondary_dark</item>
-        <item name="itemTextColor">@color/primary_dark</item>
+        <item name="itemTextColor">@color/accent_dark</item>
         <item name="itemRippleColor">@color/background_dark</item>
     </style>
 

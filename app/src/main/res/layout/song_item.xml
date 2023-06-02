@@ -70,7 +70,7 @@
 
     <ImageView
         android:id="@+id/btnMenu"
-        android:layout_width="15dp"
+        android:layout_width="12dp"
         android:layout_height="14dp"
         android:src="@drawable/ic_dotmenu"
         android:layout_marginTop="10dp"
