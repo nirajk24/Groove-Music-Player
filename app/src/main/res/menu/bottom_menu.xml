@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/homeFragment"
+        android:title="@string/home"
+        android:icon="@drawable/ic_home" />
+
+    <item android:id="@+id/albumsFragment"
+        android:title="@string/albums"
+        android:icon="@drawable/ic_album" />
+
+    <item android:id="@+id/songsFragment"
+        android:title="@string/songs"
+        android:icon="@drawable/ic_song" />
+
+    <item android:id="@+id/playlistsFragment"
+        android:title="@string/playlists"
+        android:icon="@drawable/ic_playlist" />
+
+    <item android:id="@+id/artistsFragment"
+        android:title="@string/artists"
+        android:icon="@drawable/ic_artist" />
+</menu>

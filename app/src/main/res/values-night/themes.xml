@@ -2,6 +2,24 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Groove" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
+    </style>
+
+    <style name="main_background_color">
+        <item name="android:background">@color/background_dark</item>
+    </style>
+
+    <style name="bottom_navigation_bar">
+        <item name="itemIconTint">@color/text_secondary_dark</item>
+        <item name="itemTextColor">@color/primary_dark</item>
+        <item name="itemRippleColor">@color/background_dark</item>
+    </style>
+
+    <style name="textview_main">
+        <item name="android:textColor">@color/text_main_dark</item>
+    </style>
+
+    <style name="textview_secondary">
+        <item name="android:textColor">@color/text_secondary_dark</item>
     </style>
 </resources>
