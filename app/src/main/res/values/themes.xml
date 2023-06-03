@@ -12,8 +12,11 @@
         <item name="android:background">@color/background_light</item>
     </style>
 
-    <style name="app_bar_layout_background_tint">
-        <item name="android:backgroundTint">@color/primary_light</item>
+    <style name="tool_bar">
+        <item name="android:background">@color/primary_light</item>
+        <item name="titleTextColor">@color/text_main_light</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="titleCentered">true</item>
     </style>
 
     <style name="collapsing_toolbar_layout_content_scrim">
@@ -22,7 +25,7 @@
 
     <style name="tab_layout_style">
         <item name="tabBackground">@color/primary_light</item>
-        <item name="tabTextColor">@color/text_main_dark</item>
+        <item name="tabTextColor">@color/accent_light</item>
     </style>
 
 <!--    Bottom Navigation Bar Icon, Text Color and Ripple-->

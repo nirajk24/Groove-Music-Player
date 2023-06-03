@@ -1,28 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/main_background_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.PlayerActivity">
 
-    <LinearLayout
-        android:id="@+id/headerLinearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutImage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvImage"
         android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/margin_big"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnDown"
+        <ImageView
+            android:id="@+id/imgCurrentSongImage"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            android:background="@color/accent_light" />
+
+    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="0.7"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/playerBottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutImage">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/songCurrentProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_marginStart="16dp"
+            android:minWidth="40dp"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintBottom_toBottomOf="@+id/progressSlider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/progressSlider"
+            tools:text="@tools:sample/date/hhmmss" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/progressSlider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="2dp"
+            app:layout_constraintEnd_toStartOf="@id/songTotalTime"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/songCurrentProgress"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded,UnusedAttribute"
+            tools:progress="20" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/songTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:gravity="end"
+            android:minWidth="40dp"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintBottom_toBottomOf="@+id/progressSlider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/progressSlider"
+            tools:text="@tools:sample/date/hhmmss" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:freezesText="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingHorizontal="16dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/songInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressSlider"
+            android:text="@tools:sample/lorem/random" />
 
 
-    </LinearLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/songInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/playPauseButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            android:text="Niraj" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/repeatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_selector"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/previousButton"
+            app:layout_constraintEnd_toStartOf="@+id/previousButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/previousButton"
+            app:srcCompat="@drawable/ic_repeat"
+            tools:ignore="MissingPrefix" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/previousButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_selector"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+            app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
+            app:layout_constraintStart_toEndOf="@+id/repeatButton"
+            app:layout_constraintTop_toTopOf="@+id/playPauseButton"
+            app:srcCompat="@drawable/ic_previous"
+            tools:ignore="MissingPrefix" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/playPauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/nextButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/previousButton"
+            app:layout_constraintTop_toBottomOf="@+id/songInfo"
+            app:srcCompat="@drawable/ic_pause" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_selector"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+            app:layout_constraintEnd_toStartOf="@+id/shuffleButton"
+            app:layout_constraintStart_toEndOf="@+id/playPauseButton"
+            app:layout_constraintTop_toTopOf="@+id/playPauseButton"
+            app:srcCompat="@drawable/ic_next"
+            tools:ignore="MissingPrefix" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/shuffleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_selector"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/nextButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/nextButton"
+            app:layout_constraintTop_toTopOf="@+id/nextButton"
+            app:srcCompat="@drawable/ic_shuffle"
+            tools:ignore="MissingPrefix" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/playerBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScroll="true"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            style="@style/tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|snap" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+</LinearLayout>

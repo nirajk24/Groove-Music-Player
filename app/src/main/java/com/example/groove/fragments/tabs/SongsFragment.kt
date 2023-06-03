@@ -49,6 +49,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
         binding.rvSongs.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = songAdapter
+            setHasFixedSize(true)
         }
     }
 

@@ -9,8 +9,11 @@
         <item name="android:background">@color/background_dark</item>
     </style>
 
-    <style name="app_bar_layout_background_tint">
-        <item name="android:backgroundTint">@color/primary_dark</item>
+    <style name="tool_bar">
+        <item name="android:background">@color/primary_dark</item>
+        <item name="titleTextColor">@color/text_main_dark</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="titleCentered">true</item>
     </style>
 
     <style name="collapsing_toolbar_layout_content_scrim">
