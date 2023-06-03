@@ -21,8 +21,8 @@
     </style>
 
     <style name="tab_layout_style">
-        <item name="tabBackground">@color/background_light</item>
-        <item name="tabTextColor">@color/accent_light</item>
+        <item name="tabBackground">@color/primary_light</item>
+        <item name="tabTextColor">@color/text_main_dark</item>
     </style>
 
 <!--    Bottom Navigation Bar Icon, Text Color and Ripple-->

@@ -22,14 +22,16 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    val mainViewModel : MainViewModel by lazy {
+    val mainViewModel: MainViewModel by lazy {
         val songRepository = SongRepository(SongDatabase.getInstance(this))
         val mainViewModelFactory = MainViewModelFactory(songRepository, application)
         ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
     }
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,6 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         requestRuntimePermission()
         setUpBottomNavigation()
+
+        lifecycleScope.launch {
+            mainViewModel.scanForSongs()
+        }
     }
 
 
@@ -51,39 +57,81 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.btmNav, navController)
     }
 
-    private fun requestRuntimePermission() :Boolean{
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun requestRuntimePermission(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    13
+                )
+                return false
+            }
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_MEDIA_AUDIO
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO),
+                    13
+                )
                 return false
             }
         }
-        else if(Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU){
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO), 13)
-                return false
-            }
+        lifecycleScope.launch {
+            mainViewModel.scanForSongs()
         }
         return true
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == 13){
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == 13) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch {
                     mainViewModel.scanForSongs()
                 }
-            }
-            else
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 13)
+            } else
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        13
+                    )
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO),
+                        13
+                    )
+                }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            mainViewModel.scanForSongs()
+        }
+    }
 
 
 }

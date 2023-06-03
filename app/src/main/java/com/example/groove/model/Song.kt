@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import java.util.concurrent.TimeUnit
 
 @Entity(tableName = "songs")
 @Parcelize
@@ -27,3 +28,5 @@ data class Song(
     @ColumnInfo(name = "artUri")
     val artUri: String
 ) : Parcelable
+
+

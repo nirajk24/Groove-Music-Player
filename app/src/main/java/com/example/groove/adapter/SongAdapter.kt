@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.groove.databinding.SongItemBinding
 import com.example.groove.model.Song
+import java.util.concurrent.TimeUnit
 import javax.security.auth.callback.Callback
 
 class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
@@ -44,10 +45,19 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
             .load(currentSong.artUri)
             .into(holder.binding.ivSongImage)
 
+        val time = formatDuration(currentSong.duration)
+
         holder.binding.apply {
             tvSongTitle.text = currentSong.title.toString()
-            tvSongArtist.text = currentSong.artist.plus(" • ").plus(currentSong.duration)
+            tvSongArtist.text = currentSong.artist.plus(" • ").plus(time)
         }
+    }
+
+    private fun formatDuration(duration: Long):String{
+        val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
+        val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
+                minutes* TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
+        return String.format("%02d:%02d", minutes, seconds)
     }
 
 

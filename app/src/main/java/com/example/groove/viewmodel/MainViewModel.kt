@@ -29,17 +29,16 @@ class MainViewModel(
         )
     }
 
-    private val allSongsLiveData: LiveData<List<Song>> = songRepository.getAllSongs()
+    private var allSongsLiveData = MutableLiveData<List<Song>>()
     fun observeAllSongsLiveData(): LiveData<List<Song>> {
         return allSongsLiveData
     }
 
 
-
-
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
     suspend fun scanForSongs(){
+        val tempList = ArrayList<Song>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -75,6 +74,9 @@ class MainViewModel(
                     val albumIdC =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
                             .toString()
+//                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
+//                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
+//                    val contentTypeC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE))
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
                     val song = Song(
@@ -88,17 +90,12 @@ class MainViewModel(
                     )
                     val file = File(song.path)
                     if (file.exists())
-                        songRepository.upsertSong(song)
+                        tempList.add(song)
+//                        songRepository.upsertSong(song)
                 } while (cursor.moveToNext())
             cursor.close()
         }
+        allSongsLiveData.value = tempList
     }
-
-
-//    }
-
-    //                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
-//                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
-//                    val contentTypeC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE))
 
 }
