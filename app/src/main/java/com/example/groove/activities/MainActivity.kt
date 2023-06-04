@@ -37,13 +37,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // If a user deny a permission 2 times then it's permanent denied
+        // (only way to enable now is through app settings)
         requestRuntimePermission()
         setUpBottomNavigation()
 
         lifecycleScope.launch {
             mainViewModel.scanForSongs()
         }
+
     }
+
 
 
     private fun setUpBottomNavigation() {
@@ -108,19 +112,20 @@ class MainActivity : AppCompatActivity() {
                     mainViewModel.scanForSongs()
                 }
             } else
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        13
-                    )
-                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO),
-                        13
-                    )
-                }
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+//                    ActivityCompat.requestPermissions(
+//                        this,
+//                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                        13
+//                    )
+//                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+//                    ActivityCompat.requestPermissions(
+//                        this,
+//                        arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO),
+//                        13
+//                    )
+//                }
+                requestRuntimePermission()
         }
     }
 

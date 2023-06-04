@@ -1,6 +1,7 @@
 package com.example.groove.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -18,7 +19,7 @@ interface SongDao {
     suspend fun deleteSong(song: Song)
 
     @Query("SELECT * FROM SONGS")
-    fun getAllSongs() : List<Song>
+    fun getAllSongs() : LiveData<List<Song>>
 
     @Query("SELECT * FROM SONGS WHERE title LIKE :query")
     fun searchSong(query: String?): LiveData<List<Song>>

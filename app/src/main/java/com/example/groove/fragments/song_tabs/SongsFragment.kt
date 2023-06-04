@@ -55,7 +55,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
     private fun observeSongs() {
         mainViewModel.observeAllSongsLiveData().observe(viewLifecycleOwner, Observer {
-            songAdapter.differ.submitList(it)
+            songAdapter.differ.submitList(it.values.toList())
         })
     }
 }

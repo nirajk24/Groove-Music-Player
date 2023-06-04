@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -13,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.groove.model.Song
 import com.example.groove.repository.SongRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -29,18 +31,19 @@ class MainViewModel(
         )
     }
 
-    private var allSongsLiveData = MutableLiveData<List<Song>>()
-    fun observeAllSongsLiveData(): LiveData<List<Song>> {
+    // Hashmap for Scanned Songs
+    private var allSongsLiveData = MutableLiveData<HashMap<String, Song>>()
+    fun observeAllSongsLiveData(): LiveData<HashMap<String, Song>> {
         return allSongsLiveData
     }
 
-    private var allLocalSongsLiveData = MutableLiveData<List<Song>>()
+
 
 
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
     suspend fun scanForSongs(){
-        val tempList = ArrayList<Song>()
+        val tempHashMap = HashMap<String, Song>()
         val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -92,24 +95,15 @@ class MainViewModel(
                     )
                     val file = File(song.path)
                     if (file.exists())
-                        tempList.add(song)
-                        songRepository.upsertSong(song)
+                        tempHashMap[titleC] = song
                 } while (cursor.moveToNext())
             cursor.close()
         }
-        allSongsLiveData.value = tempList
+        Log.d("CHECK", tempHashMap.toString())
+        allSongsLiveData.value = tempHashMap
     }
 
-
-    // To delete the deleted songs from roomDatabase
-    suspend fun updateAllSongRoomDatabase(){
-        val allSongs = songRepository.getAllSongs()
-        for(song in allSongs){
-            val file = File(song.path)
-            if (!file.exists()){
-                songRepository.deleteSong(song)
-            }
-        }
-    }
 
 }
+
+
