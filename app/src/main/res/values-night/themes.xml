@@ -3,6 +3,9 @@
     <style name="Base.Theme.Groove" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="android:statusBarColor">@color/primary_dark</item>
+
+        <item name="android:navigationBarColor">@color/primary_dark</item>
+
     </style>
 
     <style name="main_background_color">
@@ -30,6 +33,7 @@
         <item name="itemIconTint">@color/text_secondary_dark</item>
         <item name="itemTextColor">@color/accent_dark</item>
         <item name="itemRippleColor">@color/background_dark</item>
+        <item name="backgroundTint">@color/primary_dark</item>
     </style>
 
     <style name="textview_main">

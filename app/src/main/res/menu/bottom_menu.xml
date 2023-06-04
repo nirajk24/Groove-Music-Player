@@ -17,7 +17,7 @@
         android:title="@string/playlists"
         android:icon="@drawable/ic_playlist" />
 
-    <item android:id="@+id/artistsFragment"
+    <item android:id="@+id/profileFragment"
         android:title="@string/artists"
         android:icon="@drawable/ic_artist" />
 </menu>

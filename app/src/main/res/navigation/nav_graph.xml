@@ -6,32 +6,37 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.groove.fragments.HomeFragment"
+        android:name="com.example.groove.fragments.bottom_nav.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/albumsFragment"
-        android:name="com.example.groove.fragments.tabs.AlbumsFragment"
+        android:name="com.example.groove.fragments.song_tabs.AlbumsFragment"
         android:label="fragment_album"
         tools:layout="@layout/fragment_albums" />
     <fragment
         android:id="@+id/playlistsFragment"
-        android:name="com.example.groove.fragments.PlaylistsFragment"
+        android:name="com.example.groove.fragments.bottom_nav.PlaylistsFragment"
         android:label="fragment_playlist"
         tools:layout="@layout/fragment_playlists" />
     <fragment
         android:id="@+id/artistsFragment"
-        android:name="com.example.groove.fragments.tabs.ArtistsFragment"
+        android:name="com.example.groove.fragments.song_tabs.ArtistsFragment"
         android:label="fragment_artist"
         tools:layout="@layout/fragment_artists" />
     <fragment
         android:id="@+id/mainSongsFragment"
-        android:name="com.example.groove.fragments.MainSongsFragment"
+        android:name="com.example.groove.fragments.bottom_nav.MainSongsFragment"
         android:label="fragment_songs"
         tools:layout="@layout/fragment_main_songs" />
     <fragment
         android:id="@+id/songsFragment"
-        android:name="com.example.groove.fragments.tabs.SongsFragment"
+        android:name="com.example.groove.fragments.song_tabs.SongsFragment"
         android:label="fragment_songs"
         tools:layout="@layout/fragment_songs" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.groove.fragments.bottom_nav.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

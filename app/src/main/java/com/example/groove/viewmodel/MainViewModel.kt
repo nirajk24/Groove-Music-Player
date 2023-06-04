@@ -34,6 +34,8 @@ class MainViewModel(
         return allSongsLiveData
     }
 
+    private var allLocalSongsLiveData = MutableLiveData<List<Song>>()
+
 
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -91,11 +93,23 @@ class MainViewModel(
                     val file = File(song.path)
                     if (file.exists())
                         tempList.add(song)
-//                        songRepository.upsertSong(song)
+                        songRepository.upsertSong(song)
                 } while (cursor.moveToNext())
             cursor.close()
         }
         allSongsLiveData.value = tempList
+    }
+
+
+    // To delete the deleted songs from roomDatabase
+    suspend fun updateAllSongRoomDatabase(){
+        val allSongs = songRepository.getAllSongs()
+        for(song in allSongs){
+            val file = File(song.path)
+            if (!file.exists()){
+                songRepository.deleteSong(song)
+            }
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.groove.fragments.tabs
+package com.example.groove.fragments.song_tabs
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

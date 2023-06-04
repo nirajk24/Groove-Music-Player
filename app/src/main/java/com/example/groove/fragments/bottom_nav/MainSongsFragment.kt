@@ -1,10 +1,11 @@
-package com.example.groove.fragments
+package com.example.groove.fragments.bottom_nav
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.transition.TransitionInflater
 import com.example.groove.R
 import com.example.groove.activities.MainActivity
 import com.example.groove.adapter.SongViewPagerAdapter
@@ -22,7 +23,13 @@ class MainSongsFragment : Fragment(R.layout.fragment_main_songs) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Animation for entering
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.fade)
+
         mainViewModel = (activity as MainActivity).mainViewModel
+
+
     }
 
     override fun onCreateView(

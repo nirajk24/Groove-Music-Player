@@ -18,7 +18,7 @@ interface SongDao {
     suspend fun deleteSong(song: Song)
 
     @Query("SELECT * FROM SONGS")
-    fun getAllSongs() : LiveData<List<Song>>
+    fun getAllSongs() : List<Song>
 
     @Query("SELECT * FROM SONGS WHERE title LIKE :query")
     fun searchSong(query: String?): LiveData<List<Song>>

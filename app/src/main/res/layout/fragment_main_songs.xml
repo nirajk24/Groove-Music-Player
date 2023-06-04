@@ -1,116 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/main_background_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MainSongsFragment">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScroll="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/songs"
-            app:menu="@menu/top_app_bar_menu"
-            style="@style/tool_bar" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/appBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="130dp"-->
-<!--        style="@style/app_bar_layout_background_tint">-->
-
-<!--        <com.google.android.material.appbar.CollapsingToolbarLayout-->
-<!--            android:id="@+id/collapsingToolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            style="@style/collapsing_toolbar_layout_content_scrim"-->
-<!--            app:collapsedTitleTextColor="@color/white"-->
-<!--            app:expandedTitleTextColor="@color/white"-->
-<!--            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">-->
-
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="26dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="Songs"-->
-<!--                    android:textColor="@color/background_light"-->
-<!--                    android:textSize="22sp" />-->
-<!--            </LinearLayout>-->
-
-
-
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?actionBarSize"-->
-<!--                android:layout_gravity="bottom"-->
-<!--                app:layout_collapseMode="pin">-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/searchContainer"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="45dp"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/etSearchBox"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_marginEnd="16dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:background="@drawable/search_box_background"-->
-<!--                        android:drawableStart="@drawable/ic_search"-->
-<!--                        android:drawableTint="#595959"-->
-<!--                        android:gravity="center_vertical"-->
-<!--                        android:paddingStart="16dp"-->
-<!--                        android:paddingEnd="16dp"-->
-<!--                        android:text=" Search Songs..."-->
-<!--                        android:textColor="@color/text_secondary_light"-->
-<!--                        android:textSize="14sp" />-->
-
-
-<!--                </LinearLayout>-->
-<!--            </androidx.appcompat.widget.Toolbar>-->
-
-
-<!--        </com.google.android.material.appbar.CollapsingToolbarLayout>-->
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
-
-    <!--    <com.google.android.material.search.SearchView-->
-    <!--        android:id="@+id/searchBox"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_margin="8dp"-->
-    <!--        android:text="Search Here..."-->
-    <!--        android:hint="Search Here..."-->
-    <!--        android:layout_height="50dp"/>-->
-
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">-->
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+    tools:context=".fragments.bottom_nav.MainSongsFragment">
 
 
             <com.google.android.material.tabs.TabLayout
@@ -122,24 +17,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 style="@style/tab_layout_style" />
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout">
-
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
-            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    </androidx.core.widget.NestedScrollView>-->
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>

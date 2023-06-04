@@ -1,4 +1,4 @@
-package com.example.groove.fragments
+package com.example.groove.fragments.bottom_nav
 
 import android.content.Intent
 import android.os.Bundle

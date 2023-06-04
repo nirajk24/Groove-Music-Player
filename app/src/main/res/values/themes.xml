@@ -4,6 +4,8 @@
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">@color/primary_light</item>
         <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:navigationBarColor">@color/primary_light</item>
     </style>
 
     <style name="Theme.Groove" parent="Base.Theme.Groove" />
@@ -19,10 +21,6 @@
         <item name="titleCentered">true</item>
     </style>
 
-    <style name="collapsing_toolbar_layout_content_scrim">
-        <item name="contentScrim">@color/primary_light</item>
-    </style>
-
     <style name="tab_layout_style">
         <item name="tabBackground">@color/primary_light</item>
         <item name="tabTextColor">@color/accent_light</item>
@@ -33,6 +31,7 @@
         <item name="itemIconTint">@color/text_secondary_light</item>
         <item name="itemTextColor">@color/accent_light</item>
         <item name="itemRippleColor">@color/background_light</item>
+        <item name="backgroundTint">@color/primary_light</item>
     </style>
 
     <style name="textview_main">
