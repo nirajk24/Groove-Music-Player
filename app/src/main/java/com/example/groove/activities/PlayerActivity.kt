@@ -14,7 +14,7 @@ import com.example.groove.util.OnSwipeTouchListener
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    lateinit var binding: ActivityPlayerBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

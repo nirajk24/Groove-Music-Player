@@ -30,8 +30,8 @@
 
         <ImageView
             android:id="@+id/imgCurrentSongImage"
-            android:layout_width="0dp"
-            android:layout_height="350dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/accent_light" />
 
     </androidx.cardview.widget.CardView>
@@ -42,8 +42,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="0.7"
+        android:layout_marginTop="35dp"
+        android:layout_weight="0.65"
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/playerBottomBar"
@@ -52,46 +52,46 @@
         app:layout_constraintTop_toBottomOf="@id/layoutImage">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/songCurrentProgress"
+            android:id="@+id/tvCurrentSongProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:minWidth="40dp"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorSecondary"
+            style="@style/textview_secondary"
             app:layout_constraintBottom_toBottomOf="@+id/progressSlider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/progressSlider"
+            app:layout_constraintTop_toTopOf="@id/playerSeekbar"
             tools:text="@tools:sample/date/hhmmss" />
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/progressSlider"
+        <SeekBar
+            android:id="@+id/playerSeekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxHeight="2dp"
-            app:layout_constraintEnd_toStartOf="@id/songTotalTime"
+            app:layout_constraintEnd_toStartOf="@id/tvCurrentSongTotalTime"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/songCurrentProgress"
+            app:layout_constraintStart_toEndOf="@id/tvCurrentSongProgress"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlHardcoded,UnusedAttribute"
             tools:progress="20" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/songTotalTime"
+            android:id="@+id/tvCurrentSongTotalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="end"
             android:minWidth="40dp"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorSecondary"
+            style="@style/textview_secondary"
             app:layout_constraintBottom_toBottomOf="@+id/progressSlider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/progressSlider"
+            app:layout_constraintTop_toTopOf="@id/playerSeekbar"
             tools:text="@tools:sample/date/hhmmss" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/title"
+            android:id="@+id/tvCurrentSongTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -103,30 +103,30 @@
             android:paddingHorizontal="16dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textColor="?android:attr/textColorPrimary"
+            style="@style/textview_main"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/songInfo"
+            app:layout_constraintBottom_toTopOf="@id/tvCurrentSongInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressSlider"
+            app:layout_constraintTop_toBottomOf="@+id/playerSeekbar"
             android:text="@tools:sample/lorem/random" />
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/songInfo"
+            android:id="@+id/tvCurrentSongInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingHorizontal="16dp"
             android:paddingBottom="8dp"
-            android:textColor="?android:attr/textColorSecondary"
+            style="@style/textview_secondary"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/playPauseButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentSongTitle"
             android:text="Niraj" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -166,7 +166,7 @@
             app:layout_constraintEnd_toStartOf="@+id/nextButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/previousButton"
-            app:layout_constraintTop_toBottomOf="@+id/songInfo"
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentSongInfo"
             app:srcCompat="@drawable/ic_pause" />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -207,6 +207,7 @@
 
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/playerToolBar"
             style="@style/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"

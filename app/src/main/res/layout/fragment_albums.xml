@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/main_background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.song_tabs.AlbumsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAlbums"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Albums" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </FrameLayout>

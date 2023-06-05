@@ -1,19 +1,25 @@
 package com.example.groove.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.groove.databinding.SongItemBinding
+import com.bumptech.glide.request.RequestOptions
+import com.example.groove.R
+import com.example.groove.databinding.ItemSongBinding
 import com.example.groove.model.Song
 import java.util.concurrent.TimeUnit
 import javax.security.auth.callback.Callback
 
 class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
-    class SongViewHolder(val binding: SongItemBinding) :
+
+    lateinit var onItemClick: ((Song, Int) -> Unit)
+
+    class SongViewHolder(val binding: ItemSongBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     private val diffUtil = object : DiffUtil.ItemCallback<Song>() {
@@ -30,7 +36,7 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         return SongViewHolder(
-            SongItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -43,13 +49,19 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
         Glide.with(holder.itemView)
             .load(currentSong.artUri)
+            .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
             .into(holder.binding.ivSongImage)
+        Log.d("CHECK", "${position}.plus(${currentSong.artUri})")
 
         val time = formatDuration(currentSong.duration)
 
         holder.binding.apply {
             tvSongTitle.text = currentSong.title.toString()
             tvSongArtist.text = currentSong.artist.plus(" • ").plus(time)
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick.invoke(currentSong, position)
         }
     }
 

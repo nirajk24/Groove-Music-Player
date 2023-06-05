@@ -43,4 +43,8 @@
     <style name="textview_secondary">
         <item name="android:textColor">@color/text_secondary_dark</item>
     </style>
+
+    <style name="drawable_tint">
+        <item name="android:drawableTint">@color/text_secondary_dark</item>
+    </style>
 </resources>

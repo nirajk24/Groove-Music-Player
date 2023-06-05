@@ -16,6 +16,8 @@ import com.example.groove.R
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
 import com.example.groove.repository.SongRepository
+import com.example.groove.viewmodel.MainSongViewModel
+import com.example.groove.viewmodel.MainSongViewModelFactory
 import com.example.groove.viewmodel.MainViewModel
 import com.example.groove.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
@@ -25,10 +27,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
+
     val mainViewModel: MainViewModel by lazy {
         val songRepository = SongRepository(SongDatabase.getInstance(this))
         val mainViewModelFactory = MainViewModelFactory(songRepository, application)
         ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+    }
+
+    val mainSongViewModel: MainSongViewModel by lazy {
+        val mainSongViewModelFactory = MainSongViewModelFactory(mainViewModel)
+        ViewModelProvider(this, mainSongViewModelFactory)[MainSongViewModel::class.java]
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

@@ -1,31 +1,48 @@
 package com.example.groove.fragments.song_tabs
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.groove.R
 import com.example.groove.activities.MainActivity
+import com.example.groove.activities.PlayerActivity
 import com.example.groove.adapter.SongAdapter
 import com.example.groove.databinding.FragmentSongsBinding
+import com.example.groove.model.Song
+import com.example.groove.util.Constant
+import com.example.groove.viewmodel.MainSongViewModel
+import com.example.groove.viewmodel.MainSongViewModelFactory
 import com.example.groove.viewmodel.MainViewModel
+import com.example.groove.viewmodel.MainViewModelFactory
 
 class SongsFragment : Fragment(R.layout.fragment_songs) {
 
     private lateinit var binding: FragmentSongsBinding
     private lateinit var mainViewModel: MainViewModel
 
+    private lateinit var mainSongViewModel: MainSongViewModel
+
 
     // Adapter
     private lateinit var songAdapter: SongAdapter
+
+    // Song List
+    private lateinit var allSongListInOrder : List<Song>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainViewModel = (activity as MainActivity).mainViewModel
+        mainSongViewModel = (activity as MainActivity).mainSongViewModel
+
+
     }
 
     override fun onCreateView(
@@ -42,7 +59,9 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
         prepareSongsRecyclerView()
         observeSongs()
+        onSongItemClick()
     }
+
 
     private fun prepareSongsRecyclerView() {
         songAdapter = SongAdapter()
@@ -55,7 +74,29 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
     private fun observeSongs() {
         mainViewModel.observeAllSongsLiveData().observe(viewLifecycleOwner, Observer {
-            songAdapter.differ.submitList(it.values.toList())
+            allSongListInOrder = it.values.toList()
+
+            // Initialising Data for Songs, Artist and Album
+            mainSongViewModel.setUpAllSongData(allSongListInOrder)
+            mainSongViewModel.setUpAlbumHashMap()
+            mainSongViewModel.setUpArtistHashMap()
+
+            songAdapter.differ.submitList(allSongListInOrder)
         })
     }
+
+    private fun onSongItemClick() {
+        songAdapter.onItemClick = { song, position ->
+            val intent = Intent(activity, PlayerActivity::class.java)
+            intent.apply{
+
+                putExtra(Constant.CURRENT_SONG, song)
+                putExtra(Constant.CURRENT_SONG_POSITION, position)
+//                putExtra(CURRENT_PLAYLIST, allSongListInOrder)
+            }
+            startActivity(intent)
+        }
+    }
+
+
 }

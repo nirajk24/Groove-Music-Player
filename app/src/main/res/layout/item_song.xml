@@ -9,7 +9,7 @@
         android:id="@+id/cvSongImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:elevation="4dp"
+        app:cardElevation="0dp"
         app:cardCornerRadius="4dp"
         style="@style/main_background_color"
         android:layout_marginStart="@dimen/margin_big"
@@ -23,7 +23,7 @@
             android:id="@+id/ivSongImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primary_light"
+            android:background="#339E83EB"
             android:src="@drawable/ic_song"
             android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
@@ -73,8 +73,9 @@
         android:layout_width="12dp"
         android:layout_height="14dp"
         android:src="@drawable/ic_dotmenu"
+        style="@style/drawable_tint"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:alpha="0.9"

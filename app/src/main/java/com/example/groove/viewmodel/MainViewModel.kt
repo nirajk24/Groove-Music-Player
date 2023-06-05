@@ -2,7 +2,6 @@ package com.example.groove.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -11,11 +10,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.groove.model.Song
 import com.example.groove.repository.SongRepository
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 
 class MainViewModel(
@@ -31,10 +27,11 @@ class MainViewModel(
         )
     }
 
+
     // Hashmap for Scanned Songs
-    private var allSongsLiveData = MutableLiveData<HashMap<String, Song>>()
+    private var allSongsLiveDataMap = MutableLiveData<HashMap<String, Song>>()
     fun observeAllSongsLiveData(): LiveData<HashMap<String, Song>> {
-        return allSongsLiveData
+        return allSongsLiveDataMap
     }
 
 
@@ -53,7 +50,8 @@ class MainViewModel(
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.ALBUM_ID
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.ARTIST_ID
         )
         val cursor = application.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, null,
@@ -79,11 +77,16 @@ class MainViewModel(
                     val albumIdC =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
                             .toString()
+                    val artistIdC =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
+
 //                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
 //                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
 //                    val contentTypeC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE))
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+//                    val albumUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+//                    val artistUriC = Uri.withAppendedPath(uri, artistIdC).toString()
                     val song = Song(
                         id = idC,
                         title = titleC,
@@ -100,7 +103,7 @@ class MainViewModel(
             cursor.close()
         }
         Log.d("CHECK", tempHashMap.toString())
-        allSongsLiveData.value = tempHashMap
+        allSongsLiveDataMap.value = tempHashMap
     }
 
 
