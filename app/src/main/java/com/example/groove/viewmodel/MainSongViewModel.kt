@@ -9,29 +9,24 @@ import com.example.groove.model.Song
 class MainSongViewModel(val mainViewModel : MainViewModel) : ViewModel() {
 
     private lateinit var allSongsList : List<Song>
-
     fun setUpAllSongData(allSongList : List<Song>){
         allSongsList = allSongList
     }
 
-    private var albumHashMap = HashMap<String, ArrayList<Song>>()
-
     private var albumHashMapLiveData = MutableLiveData<HashMap<String, ArrayList<Song>>>()
-
     fun observeAlbumHashMapLiveData() : LiveData<HashMap<String, ArrayList<Song>>> {
-        Log.d("CHECK", "OBSERVED")
         return albumHashMapLiveData
     }
 
-    private var artistHashMap = HashMap<String, ArrayList<Song>>()
-
-    fun getArtistHashMap() : HashMap<String, ArrayList<Song>>{
-        return artistHashMap
+    private var artistHashMapLiveData = MutableLiveData<HashMap<String, ArrayList<Song>>>()
+    fun observeArtistHashMapLiveData() : LiveData<HashMap<String, ArrayList<Song>>> {
+        return artistHashMapLiveData
     }
 
-    fun setUpAlbumHashMap(){
+
+    fun setUpAlbumHashMapLiveData(){
+        val albumHashMap = HashMap<String, ArrayList<Song>>()
         if(allSongsList.isNotEmpty()){
-            Log.d("CHECK", "SONG LIST NOT EMPTY")
             for (song in allSongsList){
                 if(albumHashMap.containsKey(song.album)){
                     albumHashMap[song.album]?.add(song)
@@ -42,18 +37,24 @@ class MainSongViewModel(val mainViewModel : MainViewModel) : ViewModel() {
             }
         }
         albumHashMapLiveData.value = albumHashMap
-        Log.d("CHECK", albumHashMapLiveData.value.toString())
+        Log.d("CHECK", "@MainSongViewModel AlbumHashMap".plus(albumHashMapLiveData.value.toString()))
+
     }
 
-    fun setUpArtistHashMap(){
-        for (song in allSongsList){
-            if(artistHashMap.containsKey(song.artist)){
-                artistHashMap[song.artist]?.add(song)
-            }else{
-                artistHashMap[song.artist] = ArrayList<Song>()
-                artistHashMap[song.artist]?.add(song)
+    fun setUpArtistHashMapLiveData(){
+        val artistHashMap = HashMap<String, ArrayList<Song>>()
+        if(allSongsList.isNotEmpty()) {
+            for (song in allSongsList) {
+                if (artistHashMap.containsKey(song.artist)) {
+                    artistHashMap[song.artist]?.add(song)
+                } else {
+                    artistHashMap[song.artist] = ArrayList<Song>()
+                    artistHashMap[song.artist]?.add(song)
+                }
             }
         }
+        artistHashMapLiveData.value = artistHashMap
+        Log.d("CHECK", "@MainSongViewModel ArtistHashMap".plus(albumHashMapLiveData.value.toString()))
     }
 
 

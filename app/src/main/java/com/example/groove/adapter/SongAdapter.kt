@@ -51,7 +51,6 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
             .load(currentSong.artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
             .into(holder.binding.ivSongImage)
-        Log.d("CHECK", "${position}.plus(${currentSong.artUri})")
 
         val time = formatDuration(currentSong.duration)
 

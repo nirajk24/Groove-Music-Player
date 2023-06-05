@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.groove.R
 import com.example.groove.activities.MainActivity
@@ -18,9 +16,7 @@ import com.example.groove.databinding.FragmentSongsBinding
 import com.example.groove.model.Song
 import com.example.groove.util.Constant
 import com.example.groove.viewmodel.MainSongViewModel
-import com.example.groove.viewmodel.MainSongViewModelFactory
 import com.example.groove.viewmodel.MainViewModel
-import com.example.groove.viewmodel.MainViewModelFactory
 
 class SongsFragment : Fragment(R.layout.fragment_songs) {
 
@@ -74,12 +70,14 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
     private fun observeSongs() {
         mainViewModel.observeAllSongsLiveData().observe(viewLifecycleOwner, Observer {
+            binding.tvNoSongs.visibility = View.INVISIBLE  // -> Hiding No Songs Text
+
             allSongListInOrder = it.values.toList()
 
             // Initialising Data for Songs, Artist and Album
             mainSongViewModel.setUpAllSongData(allSongListInOrder)
-            mainSongViewModel.setUpAlbumHashMap()
-            mainSongViewModel.setUpArtistHashMap()
+            mainSongViewModel.setUpAlbumHashMapLiveData()
+            mainSongViewModel.setUpArtistHashMapLiveData()
 
             songAdapter.differ.submitList(allSongListInOrder)
         })

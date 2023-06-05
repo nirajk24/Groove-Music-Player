@@ -6,6 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.bottom_nav.PlaylistsFragment">
 
+    <TextView
+        android:id="@+id/tvNoPlaylist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="No Playlist Available"
+        android:textSize="24sp"
+        style="@style/textview_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 

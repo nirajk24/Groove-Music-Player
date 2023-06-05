@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.song_tabs.SongsFragment">
 
+    <TextView
+        android:id="@+id/tvNoSongs"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="No Songs Available"
+        android:textSize="24sp"
+        style="@style/textview_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
