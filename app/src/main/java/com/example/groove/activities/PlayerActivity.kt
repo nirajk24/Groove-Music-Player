@@ -23,14 +23,11 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setSwipeGestures()
 
         overridePendingTransition(
             R.anim.slide_up, R.anim.fade_out
         )
-
-
     }
 
     private fun setSwipeGestures() {
@@ -61,8 +58,8 @@ class PlayerActivity : AppCompatActivity() {
 
             override fun onSwipeDown() {
                 super.onSwipeDown()
-                Toast.makeText(this@PlayerActivity, "Swipe down gesture detected", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(this@PlayerActivity, "Swipe down gesture detected", Toast.LENGTH_SHORT)
+//                    .show()
                 onBackPressed()
             }
         })

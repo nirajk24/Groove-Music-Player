@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     private fun setUpBottomNavigation() {
         // Setting up navigation through Bottom Navigation
         // 1 -> First find the navHost using the same method

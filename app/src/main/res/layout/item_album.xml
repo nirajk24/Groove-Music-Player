@@ -10,7 +10,8 @@
         android:id="@+id/cvAlbumCover"
         style="@style/main_background_color"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
         android:layout_marginBottom="12dp"
         app:cardElevation="2dp"
         app:cardCornerRadius="8dp"
@@ -18,20 +19,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+        
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="#339E83EB"/>
 
         <ImageView
             android:id="@+id/ivSAlbumCover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#339E83EB"
             android:scaleType="centerCrop"
             android:src="@drawable/music_icon" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="#0D000000"/>
     </androidx.cardview.widget.CardView>
 
     <TextView

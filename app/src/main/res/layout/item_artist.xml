@@ -18,18 +18,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/main_background_color" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="#339E83EB"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivArtistCover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/music_icon" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="#0D000000"/>
+            android:src="@drawable/ic_song_cover" />
     </androidx.cardview.widget.CardView>
 
     <TextView

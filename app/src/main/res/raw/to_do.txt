@@ -2,3 +2,4 @@
 1 -> Manage Double Deny Permission Error
 2 -> Set Icons for songs with no cover properly
 3 -> Improve Artist Item
+4 -> Set Up Action Bar in Main Activity
