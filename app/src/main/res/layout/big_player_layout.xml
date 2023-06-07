@@ -14,27 +14,27 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1:1"
-        android:layout_marginHorizontal="@dimen/margin_big"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/imgCurrentSongImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/accent_light" />
+            <ImageView
+                android:id="@+id/imgCurrentSongImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/accent_light" />
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
