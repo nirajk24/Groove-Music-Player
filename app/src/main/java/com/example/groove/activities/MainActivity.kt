@@ -9,8 +9,11 @@ import android.view.View
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -20,14 +23,19 @@ import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
+import com.bumptech.glide.Glide
 import com.example.groove.R
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
 import com.example.groove.repository.SongRepository
+import com.example.groove.util.SlideView
+import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
 import com.example.groove.viewmodel.MainSongViewModelFactory
 import com.example.groove.viewmodel.MainViewModel
 import com.example.groove.viewmodel.MainViewModelFactory
+import com.example.groove.viewmodel.PlayerViewModel
+import com.example.groove.viewmodel.PlayerViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.launch
 
@@ -36,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    private lateinit var playerBottomSheetBehavior : BottomSheetBehavior<View>
+    private lateinit var playerBottomSheetBehavior: BottomSheetBehavior<View>
 
 
     val mainViewModel: MainViewModel by lazy {
@@ -48,6 +56,11 @@ class MainActivity : AppCompatActivity() {
     val mainSongViewModel: MainSongViewModel by lazy {
         val mainSongViewModelFactory = MainSongViewModelFactory(mainViewModel)
         ViewModelProvider(this, mainSongViewModelFactory)[MainSongViewModel::class.java]
+    }
+
+    val playerViewModel: PlayerViewModel by lazy {
+        val playerViewModelFactory = PlayerViewModelFactory(mainSongViewModel, application)
+        ViewModelProvider(this, playerViewModelFactory)[PlayerViewModel::class.java]
     }
 
 
@@ -63,7 +76,71 @@ class MainActivity : AppCompatActivity() {
         requestRuntimePermission()
         setUpBottomNavigation()
 
+        initiateBottomPlayerLayout()
+
         setUpBottomPlayerLayout()
+
+
+
+    }
+
+    private fun setUpBottomPlayerLayout() {
+        playerViewModel.CURRENT_SONG.observe(this, Observer { song ->
+            // Set mini Player
+            binding.apply {
+                Glide.with(this@MainActivity)
+                    .load(song.artUri)
+                    .centerCrop()
+                    .into(this.miniPlayerLayout.ivSongImage)
+                miniPlayerLayout.tvSongTitle.text = song.title
+                miniPlayerLayout.tvSongArtist.text = song.artist
+
+                // Set Big Player
+                Glide.with(this.root)
+                    .load(song.artUri)
+                    .centerCrop()
+                    .into(this.bigPlayerLayout.imgCurrentSongImage)
+
+                bigPlayerLayout.apply {
+                    tvCurrentSongTitle.text = song.title
+                    tvCurrentSongInfo.text = song.artist
+                    tvCurrentSongProgress.text = "00:00"
+                    tvCurrentSongTotalTime.text = utility.formatDuration(song.duration)
+                }
+            }
+        })
+
+        playerViewModel.IS_PLAYING.observe(this, Observer { isPlaying ->
+            if (isPlaying == true) {
+                // MiniPlayer
+                binding.miniPlayerLayout.btnPlayPause
+                    .setImageDrawable(
+                        AppCompatResources
+                            .getDrawable(this, R.drawable.ic_pause)
+                    )
+
+                // BigPlayer
+                binding.bigPlayerLayout.btnPlayPause
+                    .setImageDrawable(
+                        AppCompatResources
+                            .getDrawable(this, R.drawable.ic_pause)
+                    )
+            } else {
+                // MiniPlayer
+                binding.miniPlayerLayout.btnPlayPause
+                    .setImageDrawable(
+                        AppCompatResources
+                            .getDrawable(this, R.drawable.ic_play)
+                    )
+
+                // BigPlayer
+                binding.bigPlayerLayout.btnPlayPause
+                    .setImageDrawable(
+                        AppCompatResources
+                            .getDrawable(this, R.drawable.ic_play)
+                    )
+            }
+        })
 
     }
 
@@ -156,7 +233,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setUpBottomPlayerLayout() {
+    private fun initiateBottomPlayerLayout() {
         playerBottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
 
         // Slide Out (Down) Transition
@@ -175,6 +252,7 @@ class MainActivity : AppCompatActivity() {
             playerBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             animateBottomNav()
             bringOutBigPlayer()
+
         }
 
 //        binding.bigPlayerLayout.root.setOnClickListener {
@@ -190,8 +268,8 @@ class MainActivity : AppCompatActivity() {
 //                        binding.btmNav.animate().alpha(1.0f).duration = 100;
 
                         // Handling Player Layout
-                        binding.bigPlayerLayout.root.visibility = View.GONE
-                        binding.miniPlayerLayout.root.visibility = View.VISIBLE
+                        bringOutMiniPlayer()
+
 
 
 
@@ -211,14 +289,17 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     BottomSheetBehavior.STATE_DRAGGING -> {
-                        if(binding.btmNav.isVisible && binding.miniPlayerLayout.root.isVisible){
-                            animateBottomNav()
+                        if (binding.btmNav.isVisible && binding.miniPlayerLayout.root.isVisible) {
+//                            animateBottomNav()
+//                            SlideView.slideView(binding.btmNav, binding.btmNav.layoutParams.height, 0)
                             bringOutBigPlayer()
                         }
 
+
+
+
+
 //                        animateBottomNav()
-
-
 
 
 //                        transitionSlideOut.addTarget(binding.btmNav);
@@ -229,7 +310,6 @@ class MainActivity : AppCompatActivity() {
 //                        transitionFadeIn.addTarget(binding.mainPlayerLayout)
 //
 //                        TransitionManager.beginDelayedTransition(binding.root, transitionFadeIn)
-
 
 
 //                        binding.btmNav.visibility = View.GONE
@@ -243,7 +323,6 @@ class MainActivity : AppCompatActivity() {
                     }
 
 
-
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> {
 
                     }
@@ -253,15 +332,15 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     BottomSheetBehavior.STATE_SETTLING -> {
-                        if(!binding.btmNav.isVisible && binding.bigPlayerLayout.root.isVisible){
+                        if (!binding.btmNav.isVisible && binding.bigPlayerLayout.root.isVisible) {
                             animateBottomNav()
-                        }
-                        else {
+                        } else {
                             binding.btmNav.visibility = View.VISIBLE
                         }
                     }
                 }
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         }
@@ -274,6 +353,11 @@ class MainActivity : AppCompatActivity() {
         binding.bigPlayerLayout.root.visibility = View.VISIBLE
     }
 
+    private fun bringOutMiniPlayer() {
+        binding.miniPlayerLayout.root.visibility = View.VISIBLE
+        binding.bigPlayerLayout.root.visibility = View.GONE
+    }
+
     private fun animateBottomNav() {
         if (!binding.btmNav.isVisible) {
             val animate =
@@ -281,7 +365,7 @@ class MainActivity : AppCompatActivity() {
             animate.duration = 200;
             binding.btmNav.startAnimation(animate);
             binding.btmNav.visibility = View.VISIBLE;
-        }else
+        } else
             if (binding.btmNav.isVisible) {
                 val animate =
                     TranslateAnimation(0f, 0f, 0f, binding.btmNav.height.toFloat())
@@ -293,14 +377,13 @@ class MainActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if(playerBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED){
+        if (playerBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             animateBottomNav()
             playerBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
-
 
 
 }

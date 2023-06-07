@@ -21,6 +21,7 @@ import com.example.groove.util.Constant
 import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
 import com.example.groove.viewmodel.MainViewModel
+import com.example.groove.viewmodel.PlayerViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -31,7 +32,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
     private lateinit var mainViewModel: MainViewModel
 
     private lateinit var mainSongViewModel: MainSongViewModel
-
+    private lateinit var playerViewModel: PlayerViewModel
 
     // Adapter
     private lateinit var songAdapter: SongAdapter
@@ -44,6 +45,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
         mainViewModel = (activity as MainActivity).mainViewModel
         mainSongViewModel = (activity as MainActivity).mainSongViewModel
+        playerViewModel = (activity as MainActivity).playerViewModel
 
 
     }
@@ -99,20 +101,21 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
     }
 
     private fun onSongItemClick() {
-        songAdapter.onItemClick = { song, position ->
-//            val intent = Intent(activity, PlayerActivity::class.java)
-//            intent.apply{
-//
-//                putExtra(Constant.CURRENT_SONG, song)
-//                putExtra(Constant.CURRENT_SONG_POSITION, position)
-////                putExtra(CURRENT_PLAYLIST, allSongListInOrder)
-//            }
-//            startActivity(intent)
+        songAdapter.onItemClick = { song, playlist, position ->
+
+
+
+            playerViewModel.CURRENT_PLAYLIST.value = playlist
+            playerViewModel.CURRENT_POSITION.value = position
+            playerViewModel.CURRENT_SONG.value = song
+
 
             (activity as MainActivity).binding.apply {
 
+
                 // Make Bottom Player Visible
                 playerBottomSheet.visibility = View.VISIBLE
+
 
                 // Set mini Player
                 Glide.with(this.root)
@@ -127,10 +130,14 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
                     .load(song.artUri)
                     .centerCrop()
                     .into(this.bigPlayerLayout.imgCurrentSongImage)
-                bigPlayerLayout.tvCurrentSongTitle.text = song.title
-                bigPlayerLayout.tvCurrentSongInfo.text = song.artist
-                bigPlayerLayout.tvCurrentSongProgress.text = "00:00"
-                bigPlayerLayout.tvCurrentSongTotalTime.text = utility.formatDuration(song.duration)
+
+                bigPlayerLayout.apply {
+                    tvCurrentSongTitle.text = song.title
+                    tvCurrentSongInfo.text = song.artist
+                    tvCurrentSongProgress.text = "00:00"
+                    tvCurrentSongTotalTime.text = utility.formatDuration(song.duration)
+                }
+
 
 
             }

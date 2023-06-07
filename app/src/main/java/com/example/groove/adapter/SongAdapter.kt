@@ -17,7 +17,7 @@ import javax.security.auth.callback.Callback
 class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
 
-    lateinit var onItemClick: ((Song, Int) -> Unit)
+    lateinit var onItemClick: ((Song, List<Song>, Int) -> Unit)
 
     class SongViewHolder(val binding: ItemSongBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -60,7 +60,7 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
         }
 
         holder.itemView.setOnClickListener {
-            onItemClick.invoke(currentSong, position)
+            onItemClick.invoke(currentSong, differ.currentList, position)
         }
     }
 

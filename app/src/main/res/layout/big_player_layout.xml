@@ -5,6 +5,7 @@
     style="@style/main_background_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/accent_light"
     android:orientation="vertical"
     tools:context=".activities.PlayerActivity">
 
@@ -59,7 +60,7 @@
             android:minWidth="40dp"
             android:singleLine="true"
             style="@style/textview_secondary"
-            app:layout_constraintBottom_toBottomOf="@+id/progressSlider"
+            app:layout_constraintBottom_toBottomOf="@+id/playerSeekbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/playerSeekbar"
             tools:text="@tools:sample/date/hhmmss" />
@@ -123,7 +124,7 @@
             android:paddingBottom="8dp"
             style="@style/textview_secondary"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/playPauseButton"
+            app:layout_constraintBottom_toTopOf="@+id/btnPlayPause"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvCurrentSongTitle"
@@ -151,15 +152,15 @@
             android:background="@drawable/round_selector"
             android:padding="16dp"
             android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
-            app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+            app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
             app:layout_constraintStart_toEndOf="@+id/repeatButton"
-            app:layout_constraintTop_toTopOf="@+id/playPauseButton"
+            app:layout_constraintTop_toTopOf="@+id/btnPlayPause"
             app:srcCompat="@drawable/ic_previous"
             tools:ignore="MissingPrefix" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/playPauseButton"
+            android:id="@+id/btnPlayPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -176,10 +177,10 @@
             android:background="@drawable/round_selector"
             android:padding="16dp"
             android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
             app:layout_constraintEnd_toStartOf="@+id/shuffleButton"
-            app:layout_constraintStart_toEndOf="@+id/playPauseButton"
-            app:layout_constraintTop_toTopOf="@+id/playPauseButton"
+            app:layout_constraintStart_toEndOf="@+id/btnPlayPause"
+            app:layout_constraintTop_toTopOf="@+id/btnPlayPause"
             app:srcCompat="@drawable/ic_next"
             tools:ignore="MissingPrefix" />
 
@@ -208,7 +209,6 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/playerToolBar"
-            style="@style/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
