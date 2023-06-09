@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         updateCurrentSong()
 //        setPlayerLayout()
 
+
     }
 
 
@@ -121,6 +123,11 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
             )
         }
 
+        musicService!!.mediaPlayer!!.setOnCompletionListener(MediaPlayer.OnCompletionListener(){
+            setNextSong()
+        })
+
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
@@ -128,18 +135,18 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun playCurrentPlaylist() {
-        playerViewModel.CURRENT_SONG.observe(this, Observer {
-            playAudio(playerViewModel.CURRENT_SONG.value!!.path)
+        playerViewModel.currentSong.observe(this, Observer {
+            playAudio(playerViewModel.currentSong.value!!.path)
         })
-
     }
+
 
     private fun playAudio(link: String) {
         stopService(serviceIntent)
         serviceIntent.putExtra("AudioLink", link)
         try {
             startService(serviceIntent);
-            playerViewModel.IS_PLAYING.value = true
+            playerViewModel.isPlaying.value = true
             bindService(serviceIntent, this, BIND_AUTO_CREATE)
             Log.d("SERVICEE", "@PlayerActivity startService and bindService")
 
@@ -149,14 +156,14 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun updateCurrentSong() {
-        playerViewModel.CURRENT_PLAYLIST.observe(this, Observer {
-            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
-                ?.get(playerViewModel.CURRENT_POSITION.value!!)
-        })
+//        playerViewModel.CURRENT_PLAYLIST.observe(this, Observer {
+//            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
+//                ?.get(playerViewModel.CURRENT_POSITION.value!!)
+//        })
 
-        playerViewModel.CURRENT_POSITION.observe(this, Observer {
-            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
-                ?.get(playerViewModel.CURRENT_POSITION.value!!)
+        playerViewModel.currentPosition.observe(this, Observer {
+            playerViewModel.currentSong.value = playerViewModel.currentPlaylist.value
+                ?.get(playerViewModel.currentPosition.value!!)
         })
     }
 
@@ -190,12 +197,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
     private fun setNextSong() {
         playerViewModel.let {
-            val currentPos = it.CURRENT_POSITION.value
-            val listSize = it.CURRENT_PLAYLIST.value!!.size
+            val currentPos = it.currentPosition.value
+            val listSize = it.currentPlaylist.value!!.size
             if (currentPos != null) {
                 if (currentPos < listSize - 1) {
-                    playerViewModel.CURRENT_POSITION.value =
-                        playerViewModel.CURRENT_POSITION.value!! + 1
+                    playerViewModel.currentPosition.value =
+                        playerViewModel.currentPosition.value!! + 1
                 } else {
                     Toast.makeText(this, "No Next Song!!", Toast.LENGTH_SHORT).show()
                 }
@@ -205,12 +212,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
     private fun setPrevSong() {
         playerViewModel.let {
-            val currentPos = it.CURRENT_POSITION.value
+            val currentPos = it.currentPosition.value
 //            var listSize = it.CURRENT_PLAYLIST.value!!.size
             if (currentPos != null) {
                 if (currentPos != 0) {
-                    playerViewModel.CURRENT_POSITION.value =
-                        playerViewModel.CURRENT_POSITION.value!! - 1
+                    playerViewModel.currentPosition.value =
+                        playerViewModel.currentPosition.value!! - 1
                 } else {
                     Toast.makeText(this, "No Previous Song!!", Toast.LENGTH_SHORT).show()
                 }
@@ -219,19 +226,19 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
 
-    fun playPauseSong() {
-        if (playerViewModel.IS_PLAYING.value == true) {
-            playerViewModel.IS_PLAYING.value = false
+    private fun playPauseSong() {
+        if (playerViewModel.isPlaying.value == true) {
+            playerViewModel.isPlaying.value = false
             musicService!!.pauseSong()
         } else {
-            playerViewModel.IS_PLAYING.value = true
+            playerViewModel.isPlaying.value = true
             musicService!!.playSong()
         }
     }
 
 
     private fun setUpBottomPlayerLayout() {
-        playerViewModel.CURRENT_SONG.observe(this, Observer { song ->
+        playerViewModel.currentSong.observe(this, Observer { song ->
 
 
             // Set mini Player
@@ -263,7 +270,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
             }
         })
 
-        playerViewModel.IS_PLAYING.observe(this, Observer { isPlaying ->
+        playerViewModel.isPlaying.observe(this, Observer { isPlaying ->
             if (isPlaying == true) {
                 // MiniPlayer
                 binding.miniPlayerLayout.btnPlayPause

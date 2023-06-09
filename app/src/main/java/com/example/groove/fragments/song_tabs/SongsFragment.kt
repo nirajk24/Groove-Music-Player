@@ -1,7 +1,5 @@
 package com.example.groove.fragments.song_tabs
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,20 +8,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.groove.R
 import com.example.groove.activities.MainActivity
-import com.example.groove.activities.PlayerActivity
 import com.example.groove.adapter.SongAdapter
 import com.example.groove.databinding.FragmentSongsBinding
 import com.example.groove.model.Song
-import com.example.groove.util.Constant
-import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
 import com.example.groove.viewmodel.MainViewModel
 import com.example.groove.viewmodel.PlayerViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class SongsFragment : Fragment(R.layout.fragment_songs) {
@@ -104,9 +96,9 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
         songAdapter.onItemClick = { song, playlist, position ->
 
 
-            playerViewModel.CURRENT_PLAYLIST.value = playlist
-            playerViewModel.CURRENT_POSITION.value = position
-            playerViewModel.CURRENT_SONG.value = song
+            playerViewModel.currentPlaylist.value = playlist
+            playerViewModel.currentPosition.value = position
+            playerViewModel.currentSong.value = song
 
 
 //            (activity as MainActivity).setCurrentSongLayout()

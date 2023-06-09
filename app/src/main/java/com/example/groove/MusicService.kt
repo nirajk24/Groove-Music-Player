@@ -11,7 +11,13 @@ import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.groove.activities.MainActivity
+import com.example.groove.db.SongDatabase
+import com.example.groove.repository.SongRepository
+import com.example.groove.viewmodel.MainViewModelFactory
+import com.example.groove.viewmodel.PlayerViewModel
+import com.example.groove.viewmodel.PlayerViewModelFactory
 import java.lang.Exception
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
@@ -19,6 +25,8 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
 
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
+
+
 
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
@@ -65,6 +73,11 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
         return START_STICKY
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopSelf()
+    }
+
     fun pauseSong(){
         mediaPlayer!!.pause()
     }
@@ -89,6 +102,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
 
         stopSelf()
     }
+
 
 //    fun seekBarSetup(){
 //        runnable = Runnable {
