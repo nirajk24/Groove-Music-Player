@@ -32,11 +32,11 @@
                 android:id="@+id/imgCurrentSongImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/accent_light" />
+                android:background="#4D9E83EB"
+                />
 
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,12 +53,12 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCurrentSongProgress"
+            style="@style/textview_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:minWidth="40dp"
             android:singleLine="true"
-            style="@style/textview_secondary"
             app:layout_constraintBottom_toBottomOf="@+id/playerSeekbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/playerSeekbar"
@@ -78,13 +78,13 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCurrentSongTotalTime"
+            style="@style/textview_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="end"
             android:minWidth="40dp"
             android:singleLine="true"
-            style="@style/textview_secondary"
             app:layout_constraintBottom_toBottomOf="@+id/playerSeekbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/playerSeekbar"
@@ -92,6 +92,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCurrentSongTitle"
+            style="@style/textview_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -103,42 +104,43 @@
             android:paddingHorizontal="16dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            style="@style/textview_main"
+            android:text="@tools:sample/lorem/random"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/tvCurrentSongInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerSeekbar"
-            android:text="@tools:sample/lorem/random" />
+            app:layout_constraintTop_toBottomOf="@+id/playerSeekbar" />
 
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCurrentSongInfo"
+            style="@style/textview_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingHorizontal="16dp"
             android:paddingBottom="8dp"
-            style="@style/textview_secondary"
+            android:text="Niraj"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/btnPlayPause"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCurrentSongTitle"
-            android:text="Niraj" />
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentSongTitle" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/repeatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_selector"
+            style="@style/drawable_tint"
             android:padding="16dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/previousButton"
             app:layout_constraintEnd_toStartOf="@+id/previousButton"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/previousButton"
             app:srcCompat="@drawable/ic_repeat"
@@ -148,6 +150,7 @@
             android:id="@+id/previousButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/drawable_tint"
             android:background="@drawable/round_selector"
             android:padding="16dp"
             android:scaleType="fitCenter"
@@ -162,6 +165,7 @@
             android:id="@+id/btnPlayPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/drawable_tint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/nextButton"
             app:layout_constraintHorizontal_bias="0.5"
@@ -174,6 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_selector"
+            style="@style/drawable_tint"
             android:padding="16dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
@@ -188,6 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_selector"
+            style="@style/drawable_tint"
             android:padding="16dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/nextButton"
@@ -210,6 +216,7 @@
             android:id="@+id/playerToolBar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            style="@style/main_background_color"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
     </com.google.android.material.appbar.AppBarLayout>
 

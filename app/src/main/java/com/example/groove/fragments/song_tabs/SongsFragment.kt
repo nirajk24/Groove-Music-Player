@@ -104,43 +104,12 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
         songAdapter.onItemClick = { song, playlist, position ->
 
 
-
             playerViewModel.CURRENT_PLAYLIST.value = playlist
             playerViewModel.CURRENT_POSITION.value = position
             playerViewModel.CURRENT_SONG.value = song
 
 
-            (activity as MainActivity).binding.apply {
-
-
-                // Make Bottom Player Visible
-                playerBottomSheet.visibility = View.VISIBLE
-
-
-                // Set mini Player
-                Glide.with(this.root)
-                    .load(song.artUri)
-                    .centerCrop()
-                    .into(this.miniPlayerLayout.ivSongImage)
-                miniPlayerLayout.tvSongTitle.text = song.title
-                miniPlayerLayout.tvSongArtist.text = song.artist
-
-                // Set Big Player
-                Glide.with(this.root)
-                    .load(song.artUri)
-                    .centerCrop()
-                    .into(this.bigPlayerLayout.imgCurrentSongImage)
-
-                bigPlayerLayout.apply {
-                    tvCurrentSongTitle.text = song.title
-                    tvCurrentSongInfo.text = song.artist
-                    tvCurrentSongProgress.text = "00:00"
-                    tvCurrentSongTotalTime.text = utility.formatDuration(song.duration)
-                }
-
-
-
-            }
+//            (activity as MainActivity).setCurrentSongLayout()
 
         }
     }

@@ -1,18 +1,24 @@
 package com.example.groove.activities
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.animation.TranslateAnimation
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,11 +30,12 @@ import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.groove.MusicService
 import com.example.groove.R
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
 import com.example.groove.repository.SongRepository
-import com.example.groove.util.SlideView
 import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
 import com.example.groove.viewmodel.MainSongViewModelFactory
@@ -39,7 +46,7 @@ import com.example.groove.viewmodel.PlayerViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ServiceConnection {
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -47,6 +54,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playerBottomSheetBehavior: BottomSheetBehavior<View>
 
 
+    // <----- Service Starts ---->
+    private lateinit var serviceIntent: Intent
+    private var musicService: MusicService? = null
+    // <----- Service Ends ---->
+
+
+    // <----- ViewModel Starts ---->
     val mainViewModel: MainViewModel by lazy {
         val songRepository = SongRepository(SongDatabase.getInstance(this))
         val mainViewModelFactory = MainViewModelFactory(songRepository, application)
@@ -62,9 +76,10 @@ class MainActivity : AppCompatActivity() {
         val playerViewModelFactory = PlayerViewModelFactory(mainSongViewModel, application)
         ViewModelProvider(this, playerViewModelFactory)[PlayerViewModel::class.java]
     }
+    // <----- ViewModel Ends ---->
 
 
-    // Main
+    // <----- MAIN ---->
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,30 +89,168 @@ class MainActivity : AppCompatActivity() {
         // If a user deny a permission 2 times then it's permanent denied
         // (only way to enable now is through app settings)
         requestRuntimePermission()
+
         setUpBottomNavigation()
 
+        serviceIntent = Intent(this, MusicService::class.java)
+
         initiateBottomPlayerLayout()
-
         setUpBottomPlayerLayout()
+        clickListener()
+        seekBarListener()
 
+        playCurrentPlaylist()
 
+        updateCurrentSong()
+//        setPlayerLayout()
 
     }
 
+
+    // <----- Service Starts ---->
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        Log.d("SERVICEE", "@PlayerActivity onServiceConnected Called")
+        if (musicService == null) {
+            val binder = service as MusicService.MyBinder
+            musicService = binder.currentService()
+            musicService!!.audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+            musicService!!.audioManager.requestAudioFocus(
+                musicService,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
+
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+        TODO("Not yet implemented")
+    }
+
+    private fun playCurrentPlaylist() {
+        playerViewModel.CURRENT_SONG.observe(this, Observer {
+            playAudio(playerViewModel.CURRENT_SONG.value!!.path)
+        })
+
+    }
+
+    private fun playAudio(link: String) {
+        stopService(serviceIntent)
+        serviceIntent.putExtra("AudioLink", link)
+        try {
+            startService(serviceIntent);
+            playerViewModel.IS_PLAYING.value = true
+            bindService(serviceIntent, this, BIND_AUTO_CREATE)
+            Log.d("SERVICEE", "@PlayerActivity startService and bindService")
+
+        } catch (e: SecurityException) {
+            Toast.makeText(this, "Error: " + e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateCurrentSong() {
+        playerViewModel.CURRENT_PLAYLIST.observe(this, Observer {
+            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
+                ?.get(playerViewModel.CURRENT_POSITION.value!!)
+        })
+
+        playerViewModel.CURRENT_POSITION.observe(this, Observer {
+            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
+                ?.get(playerViewModel.CURRENT_POSITION.value!!)
+        })
+    }
+
+    // <----- Service Ends ---->
+
+
+    // <----- View Starts ---->
+    private fun clickListener() {
+        // Mini Player
+        binding.miniPlayerLayout.btnPlayPause.setOnClickListener { playPauseSong() }
+        binding.miniPlayerLayout.btnNext.setOnClickListener { setNextSong() }
+
+        // Big Player
+        binding.bigPlayerLayout.btnPlayPause.setOnClickListener { playPauseSong() }
+        binding.bigPlayerLayout.nextButton.setOnClickListener { setNextSong() }
+        binding.bigPlayerLayout.previousButton.setOnClickListener { setPrevSong() }
+    }
+
+    private fun seekBarListener(){
+        binding.bigPlayerLayout.playerSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if(fromUser) {
+                    musicService!!.mediaPlayer!!.seekTo(progress)
+//                    musicService!!.showNotification(if(isPlaying) R.drawable.pause_icon else R.drawable.play_icon)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+    }
+
+    private fun setNextSong() {
+        playerViewModel.let {
+            val currentPos = it.CURRENT_POSITION.value
+            val listSize = it.CURRENT_PLAYLIST.value!!.size
+            if (currentPos != null) {
+                if (currentPos < listSize - 1) {
+                    playerViewModel.CURRENT_POSITION.value =
+                        playerViewModel.CURRENT_POSITION.value!! + 1
+                } else {
+                    Toast.makeText(this, "No Next Song!!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setPrevSong() {
+        playerViewModel.let {
+            val currentPos = it.CURRENT_POSITION.value
+//            var listSize = it.CURRENT_PLAYLIST.value!!.size
+            if (currentPos != null) {
+                if (currentPos != 0) {
+                    playerViewModel.CURRENT_POSITION.value =
+                        playerViewModel.CURRENT_POSITION.value!! - 1
+                } else {
+                    Toast.makeText(this, "No Previous Song!!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
+    fun playPauseSong() {
+        if (playerViewModel.IS_PLAYING.value == true) {
+            playerViewModel.IS_PLAYING.value = false
+            musicService!!.pauseSong()
+        } else {
+            playerViewModel.IS_PLAYING.value = true
+            musicService!!.playSong()
+        }
+    }
+
+
     private fun setUpBottomPlayerLayout() {
         playerViewModel.CURRENT_SONG.observe(this, Observer { song ->
+
+
             // Set mini Player
             binding.apply {
-                Glide.with(this@MainActivity)
+
+                playerBottomSheet.visibility = View.VISIBLE
+
+                Glide.with(this@MainActivity).asBitmap()
                     .load(song.artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
                     .centerCrop()
                     .into(this.miniPlayerLayout.ivSongImage)
                 miniPlayerLayout.tvSongTitle.text = song.title
                 miniPlayerLayout.tvSongArtist.text = song.artist
 
                 // Set Big Player
-                Glide.with(this.root)
+                Glide.with(this.root).asBitmap()
                     .load(song.artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
                     .centerCrop()
                     .into(this.bigPlayerLayout.imgCurrentSongImage)
 
@@ -155,6 +308,11 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.btmNav, navController)
     }
 
+
+    // <----- View Ends ---->
+
+
+    // <----- Permission Starts ----->
     @RequiresApi(Build.VERSION_CODES.R)
     private fun requestRuntimePermission(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -223,16 +381,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    override fun onResume() {
-        super.onResume()
-
-        lifecycleScope.launch {
-            mainViewModel.scanForSongs()
-        }
-    }
+    // <----- Permission Ends ---->
 
 
+    // <----- BottomPlayer Starts ---->
     private fun initiateBottomPlayerLayout() {
         playerBottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
 
@@ -294,9 +446,6 @@ class MainActivity : AppCompatActivity() {
 //                            SlideView.slideView(binding.btmNav, binding.btmNav.layoutParams.height, 0)
                             bringOutBigPlayer()
                         }
-
-
-
 
 
 //                        animateBottomNav()
@@ -370,10 +519,12 @@ class MainActivity : AppCompatActivity() {
                 val animate =
                     TranslateAnimation(0f, 0f, 0f, binding.btmNav.height.toFloat())
                 animate.duration = 300;
-                binding.btmNav.startAnimation(animate);
-                binding.btmNav.visibility = View.GONE;
+                binding.btmNav.startAnimation(animate)
+                binding.btmNav.visibility = View.GONE
             }
     }
+
+    // <----- BottomPlayer Starts ---->
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -382,6 +533,15 @@ class MainActivity : AppCompatActivity() {
             playerBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
             super.onBackPressed()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            mainViewModel.scanForSongs()
         }
     }
 

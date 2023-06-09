@@ -47,7 +47,7 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val currentSong = differ.currentList[position]
 
-        Glide.with(holder.itemView)
+        Glide.with(holder.itemView).asBitmap()
             .load(currentSong.artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
             .into(holder.binding.ivSongImage)
