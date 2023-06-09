@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
-            android:text="No Songs Available"
+            android:text="No Playlists Added"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

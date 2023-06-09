@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#409E83EB"
     android:layout_height="74dp">
 
@@ -72,7 +73,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginEnd="16dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,16 +83,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:layout_marginEnd="6dp"
             app:srcCompat="@drawable/ic_pause" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnNext"
-            android:layout_height="45dp"
-            android:layout_width="40dp"
-            android:layout_weight="1"
-            android:alpha="0.9"
-            android:src="@drawable/ic_next" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_selector"
+            style="@style/drawable_tint"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+            app:layout_constraintEnd_toStartOf="@+id/shuffleButton"
+            app:layout_constraintStart_toEndOf="@+id/btnPlayPause"
+            app:layout_constraintTop_toTopOf="@+id/btnPlayPause"
+            app:srcCompat="@drawable/ic_next"
+            tools:ignore="MissingPrefix" />
 
     </LinearLayout>
 

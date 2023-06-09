@@ -98,7 +98,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
             playerViewModel.currentPlaylist.value = playlist
             playerViewModel.currentPosition.value = position
-            playerViewModel.currentSong.value = song
+//            playerViewModel.currentSong.value = song
 
 
 //            (activity as MainActivity).setCurrentSongLayout()

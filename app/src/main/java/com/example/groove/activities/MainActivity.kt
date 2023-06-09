@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.view.Gravity
@@ -17,6 +17,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -45,6 +46,8 @@ import com.example.groove.viewmodel.MainViewModelFactory
 import com.example.groove.viewmodel.PlayerViewModel
 import com.example.groove.viewmodel.PlayerViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ServiceConnection {
@@ -98,7 +101,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         initiateBottomPlayerLayout()
         setUpBottomPlayerLayout()
         clickListener()
-        seekBarListener()
+
 
         playCurrentPlaylist()
 
@@ -111,7 +114,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
     // <----- Service Starts ---->
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        Log.d("SERVICEE", "@PlayerActivity onServiceConnected Called")
+        Log.d("PLAYBACK", "@PlayerActivity onServiceConnected Called")
         if (musicService == null) {
             val binder = service as MusicService.MyBinder
             musicService = binder.currentService()
@@ -123,7 +126,13 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
             )
         }
 
+        seekBarListener()
+        initialiseSeekbar()
+
+
         musicService!!.mediaPlayer!!.setOnCompletionListener(MediaPlayer.OnCompletionListener(){
+
+            Log.d("PLAYBACK", "On Completed Listened")
             setNextSong()
         })
 
@@ -135,8 +144,13 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun playCurrentPlaylist() {
-        playerViewModel.currentSong.observe(this, Observer {
+        playerViewModel.currentSong.observeForever( Observer {
             playAudio(playerViewModel.currentSong.value!!.path)
+
+            Log.d("PLAYBACK", "currentSong changed - will call initialise seekbar")
+            initialiseSeekbar()
+
+
         })
     }
 
@@ -145,10 +159,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         stopService(serviceIntent)
         serviceIntent.putExtra("AudioLink", link)
         try {
-            startService(serviceIntent);
+            startService(serviceIntent)
             playerViewModel.isPlaying.value = true
             bindService(serviceIntent, this, BIND_AUTO_CREATE)
-            Log.d("SERVICEE", "@PlayerActivity startService and bindService")
+
 
         } catch (e: SecurityException) {
             Toast.makeText(this, "Error: " + e.message, Toast.LENGTH_SHORT).show()
@@ -156,15 +170,78 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun updateCurrentSong() {
-//        playerViewModel.CURRENT_PLAYLIST.observe(this, Observer {
-//            playerViewModel.CURRENT_SONG.value = playerViewModel.CURRENT_PLAYLIST.value
-//                ?.get(playerViewModel.CURRENT_POSITION.value!!)
+//        playerViewModel.currentPlaylist.observe(this, Observer {
+//            playerViewModel.currentSong.value = playerViewModel.currentPlaylist.value
+//                ?.get(playerViewModel.currentPosition.value!!)
 //        })
 
-        playerViewModel.currentPosition.observe(this, Observer {
+        playerViewModel.currentPosition.observeForever(Observer {
+            Log.d("PLAYBACK", "Observed Current Song")
+
             playerViewModel.currentSong.value = playerViewModel.currentPlaylist.value
                 ?.get(playerViewModel.currentPosition.value!!)
         })
+    }
+
+    private fun seekBarListener(){
+        binding.bigPlayerLayout.playerSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                if(fromUser) {
+                    val songProgressTextView = binding.bigPlayerLayout.tvCurrentSongProgress
+                    songProgressTextView.text = utility.formatDuration(progress.toLong())
+
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                musicService!!.mediaPlayer!!.seekTo(seekBar!!.progress)
+            }
+        })
+    }
+
+    private fun run() {
+        var currentPosition: Int = musicService!!.mediaPlayer!!.currentPosition
+        val total: Int = musicService!!.mediaPlayer!!.duration
+        while (musicService!!.mediaPlayer!!.isPlaying && musicService!!.mediaPlayer!!.currentPosition < total) {
+            currentPosition = try {
+                Thread.sleep(1000)
+                musicService!!.mediaPlayer!!.currentPosition
+            } catch (e: InterruptedException) {
+                return
+            } catch (e: Exception) {
+                return
+            }
+            binding.bigPlayerLayout.playerSeekbar.progress = currentPosition
+        }
+    }
+
+    private fun initialiseSeekbar(){
+        if(musicService != null) {
+            Log.d("PLAYBACK", "@PlayerActivity UNDER initialise Seekbar")
+            val seekbar = binding.bigPlayerLayout.playerSeekbar
+            val songProgressTextView = binding.bigPlayerLayout.tvCurrentSongProgress
+            val mediaPlayer = musicService!!.mediaPlayer!!
+            seekbar.max = playerViewModel.currentSong.value!!.duration.toInt()
+
+            val handler = Handler()
+            handler.postDelayed(object : Runnable {
+
+                override fun run() {
+                    try {
+                        Log.d("SEEKBAR", "@PlayerActivity UNDER run function")
+                        seekbar.progress = mediaPlayer.currentPosition
+                        songProgressTextView.text = utility.formatDuration(seekbar.progress.toLong())
+                        handler.postDelayed(this, 1000)
+                    }catch (e: Exception){
+                        Log.d("SEEKBAR", "@PlayerActivity Exception ${e.message}")
+                        seekbar.progress = 0
+                    }
+                }
+            }, 0)
+        }
     }
 
     // <----- Service Ends ---->
@@ -182,18 +259,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         binding.bigPlayerLayout.previousButton.setOnClickListener { setPrevSong() }
     }
 
-    private fun seekBarListener(){
-        binding.bigPlayerLayout.playerSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser) {
-                    musicService!!.mediaPlayer!!.seekTo(progress)
-//                    musicService!!.showNotification(if(isPlaying) R.drawable.pause_icon else R.drawable.play_icon)
-                }
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
-        })
-    }
+
 
     private fun setNextSong() {
         playerViewModel.let {
@@ -505,12 +571,34 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     private fun bringOutBigPlayer() {
+
+        val transitionFadeOut: Transition = Fade(Fade.OUT)
+        transitionFadeOut.duration = 150;
+        transitionFadeOut.addTarget(binding.miniPlayerLayout.root);
+        TransitionManager.beginDelayedTransition(binding.root, transitionFadeOut)
         binding.miniPlayerLayout.root.visibility = View.GONE
+
+        // Fade In Transition
+        val transitionFadeIn: Transition = Fade(Fade.IN)
+        transitionFadeIn.duration = 150;
+        transitionFadeIn.addTarget(binding.bigPlayerLayout.root);
+        TransitionManager.beginDelayedTransition(binding.root, transitionFadeIn)
         binding.bigPlayerLayout.root.visibility = View.VISIBLE
     }
 
     private fun bringOutMiniPlayer() {
+        // Fade In Transition
+        val transitionFadeIn: Transition = Fade(Fade.IN)
+        transitionFadeIn.duration = 100;
+        transitionFadeIn.addTarget(binding.miniPlayerLayout.root);
+        TransitionManager.beginDelayedTransition(binding.root, transitionFadeIn)
         binding.miniPlayerLayout.root.visibility = View.VISIBLE
+
+        // Fade Out Transition
+        val transitionFadeOut: Transition = Fade(Fade.OUT)
+        transitionFadeOut.duration = 200;
+        transitionFadeOut.addTarget(binding.bigPlayerLayout.root);
+        TransitionManager.beginDelayedTransition(binding.root, transitionFadeOut)
         binding.bigPlayerLayout.root.visibility = View.GONE
     }
 
