@@ -1,8 +1,12 @@
 package com.example.groove
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.media.AudioManager
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -11,6 +15,7 @@ import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.groove.activities.MainActivity
 import com.example.groove.db.SongDatabase
@@ -27,10 +32,12 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
     var mediaPlayer: MediaPlayer? = null
 
 
-
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
     lateinit var audioManager: AudioManager
+
+    private lateinit var mediaSessionCompat: MediaSessionCompat
+
 
     private var currentSongLink : String = ""
 
@@ -52,6 +59,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
         mediaPlayer = MediaPlayer()
         mediaPlayer!!.setOnCompletionListener(this)
         mediaPlayer!!.setOnPreparedListener(this)
+
+        mediaSessionCompat = MediaSessionCompat(baseContext, "My Audio")
+
 //        mediaPlayer!!.setOnSeekCompleteListener(this)
 //        mediaPlayer!!.setOnInfoListener(this)
     }
@@ -62,7 +72,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
 
         mediaPlayer!!.reset()
 
-        if (!mediaPlayer!!.isPlaying) {
+        if (!(mediaPlayer!!.isPlaying)) {
             try {
                 mediaPlayer!!.setDataSource(currentSongLink)
                 mediaPlayer!!.prepareAsync()
@@ -128,4 +138,60 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,
 //    override fun onSeekComplete(mp: MediaPlayer?) {
 //        TODO("Not yet implemented")
 //    }
+
+
+
+    fun showNotification(playPauseBtn: Int) {
+        val intent = Intent(this, MainActivity::class.java)
+        val contentIntent = PendingIntent
+            .getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val prevIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(ApplicationClass.PREVIOUS)
+        val prevPending = PendingIntent
+            .getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val playPauseIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(ApplicationClass.PAUSE)
+        val playPausePending = PendingIntent
+            .getBroadcast(this, 0, playPauseIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val nextIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(ApplicationClass.PLAY)
+        val nextPending = PendingIntent
+            .getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE)
+
+
+        val imgArt = getImageArt(currentSongLink)
+        val thumb = if(imgArt != null){
+            BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
+        }else{
+            BitmapFactory.decodeResource(resources, R.drawable.music_icon)
+        }
+
+        val notification = NotificationCompat.Builder(this, ApplicationClass.CHANNEL_ID_2)
+            .setSmallIcon(playPauseBtn)
+            .setLargeIcon(thumb)
+            .setContentTitle(currentSongLink)
+            .setContentText(currentSongLink)
+            .addAction(R.drawable.ic_previous, "Previous", prevPending)
+            .addAction(playPauseBtn, "Pause", playPausePending)
+            .addAction(R.drawable.ic_next, "Next", nextPending)
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(mediaSessionCompat.sessionToken))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
+            .build()
+
+
+        startForeground(13, notification)
+    }
+
+    private fun getImageArt(uri: String): ByteArray? {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(uri)
+        return retriever.embeddedPicture
+    }
+
 }

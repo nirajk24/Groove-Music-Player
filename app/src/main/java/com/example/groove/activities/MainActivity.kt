@@ -1,15 +1,20 @@
 package com.example.groove.activities
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.media.AudioManager
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
+import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -20,6 +25,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +39,12 @@ import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.groove.ApplicationClass.Companion.CHANNEL_ID_2
+import com.example.groove.ApplicationClass.Companion.PAUSE
+import com.example.groove.ApplicationClass.Companion.PLAY
+import com.example.groove.ApplicationClass.Companion.PREVIOUS
 import com.example.groove.MusicService
+import com.example.groove.NotificationReceiver
 import com.example.groove.R
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
@@ -47,7 +58,6 @@ import com.example.groove.viewmodel.PlayerViewModel
 import com.example.groove.viewmodel.PlayerViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ServiceConnection {
@@ -56,6 +66,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     private lateinit var navController: NavController
 
     private lateinit var playerBottomSheetBehavior: BottomSheetBehavior<View>
+
+    private lateinit var mediaSessionCompat: MediaSessionCompat
 
 
     // <----- Service Starts ---->
@@ -96,6 +108,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
         setUpBottomNavigation()
 
+        mediaSessionCompat = MediaSessionCompat(baseContext, "My Audio")
+
         serviceIntent = Intent(this, MusicService::class.java)
 
         initiateBottomPlayerLayout()
@@ -129,8 +143,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         seekBarListener()
         initialiseSeekbar()
 
+        musicService!!.showNotification(R.drawable.ic_pause) /// ---> FIX
 
-        musicService!!.mediaPlayer!!.setOnCompletionListener(MediaPlayer.OnCompletionListener(){
+        musicService!!.mediaPlayer!!.setOnCompletionListener(MediaPlayer.OnCompletionListener() {
 
             Log.d("PLAYBACK", "On Completed Listened")
             setNextSong()
@@ -140,16 +155,17 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
-        TODO("Not yet implemented")
+        if (musicService != null)
+            musicService!!.stopSelf()
     }
 
     private fun playCurrentPlaylist() {
-        playerViewModel.currentSong.observeForever( Observer {
+        playerViewModel.currentSong.observeForever(Observer {
             playAudio(playerViewModel.currentSong.value!!.path)
+
 
             Log.d("PLAYBACK", "currentSong changed - will call initialise seekbar")
             initialiseSeekbar()
-
 
         })
     }
@@ -158,10 +174,17 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     private fun playAudio(link: String) {
         stopService(serviceIntent)
         serviceIntent.putExtra("AudioLink", link)
+
+        if(musicService != null){    /// -----> FIX
+            musicService!!.showNotification(R.drawable.ic_pause)
+        }
         try {
             startService(serviceIntent)
             playerViewModel.isPlaying.value = true
             bindService(serviceIntent, this, BIND_AUTO_CREATE)
+
+
+
 
 
         } catch (e: SecurityException) {
@@ -183,43 +206,33 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         })
     }
 
-    private fun seekBarListener(){
-        binding.bigPlayerLayout.playerSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+    private fun seekBarListener() {
+        binding.bigPlayerLayout.playerSeekbar
+            .setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
 
-                if(fromUser) {
-                    val songProgressTextView = binding.bigPlayerLayout.tvCurrentSongProgress
-                    songProgressTextView.text = utility.formatDuration(progress.toLong())
+                    if (fromUser) {
+                        val songProgressTextView = binding.bigPlayerLayout.tvCurrentSongProgress
+                        songProgressTextView.text = utility.formatDuration(progress.toLong())
 
+                    }
                 }
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                musicService!!.mediaPlayer!!.seekTo(seekBar!!.progress)
-            }
-        })
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    musicService!!.mediaPlayer!!.seekTo(seekBar!!.progress)
+                }
+            })
     }
 
-    private fun run() {
-        var currentPosition: Int = musicService!!.mediaPlayer!!.currentPosition
-        val total: Int = musicService!!.mediaPlayer!!.duration
-        while (musicService!!.mediaPlayer!!.isPlaying && musicService!!.mediaPlayer!!.currentPosition < total) {
-            currentPosition = try {
-                Thread.sleep(1000)
-                musicService!!.mediaPlayer!!.currentPosition
-            } catch (e: InterruptedException) {
-                return
-            } catch (e: Exception) {
-                return
-            }
-            binding.bigPlayerLayout.playerSeekbar.progress = currentPosition
-        }
-    }
 
-    private fun initialiseSeekbar(){
-        if(musicService != null) {
+    private fun initialiseSeekbar() {
+        if (musicService != null) {
             Log.d("PLAYBACK", "@PlayerActivity UNDER initialise Seekbar")
             val seekbar = binding.bigPlayerLayout.playerSeekbar
             val songProgressTextView = binding.bigPlayerLayout.tvCurrentSongProgress
@@ -233,9 +246,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
                     try {
                         Log.d("SEEKBAR", "@PlayerActivity UNDER run function")
                         seekbar.progress = mediaPlayer.currentPosition
-                        songProgressTextView.text = utility.formatDuration(seekbar.progress.toLong())
+                        songProgressTextView.text =
+                            utility.formatDuration(seekbar.progress.toLong())
                         handler.postDelayed(this, 1000)
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.d("SEEKBAR", "@PlayerActivity Exception ${e.message}")
                         seekbar.progress = 0
                     }
@@ -245,6 +259,67 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     }
 
     // <----- Service Ends ---->
+
+
+    // <------ Notification Starts ----->
+
+    fun showNotification(playPauseBtn: Int) {
+        val intent = Intent(this, MainActivity::class.java)
+        val contentIntent = PendingIntent
+            .getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val prevIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(PREVIOUS)
+        val prevPending = PendingIntent
+            .getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val playPauseIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(PAUSE)
+        val playPausePending = PendingIntent
+            .getBroadcast(this, 0, playPauseIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val nextIntent = Intent(this, NotificationReceiver::class.java)
+            .setAction(PLAY)
+        val nextPending = PendingIntent
+            .getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE)
+
+
+        val imgArt = getImageArt(playerViewModel.currentSong.value!!.path)
+        val thumb = if(imgArt != null){
+            BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
+        }else{
+            BitmapFactory.decodeResource(resources, R.drawable.music_icon)
+        }
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID_2)
+            .setSmallIcon(playPauseBtn)
+            .setLargeIcon(thumb)
+            .setContentTitle(playerViewModel.currentSong.value!!.title)
+            .setContentText(playerViewModel.currentSong.value!!.artist)
+            .addAction(R.drawable.ic_previous, "Previous", prevPending)
+            .addAction(playPauseBtn, "Pause", playPausePending)
+            .addAction(R.drawable.ic_next, "Next", nextPending)
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(mediaSessionCompat.sessionToken))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
+            .build()
+
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.notify(0, notification)
+    }
+
+    private fun getImageArt(uri: String): ByteArray? {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(uri)
+        return retriever.embeddedPicture
+    }
+
+
+    // <------ Notification Ends ----->
 
 
     // <----- View Starts ---->
@@ -258,7 +333,6 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         binding.bigPlayerLayout.nextButton.setOnClickListener { setNextSong() }
         binding.bigPlayerLayout.previousButton.setOnClickListener { setPrevSong() }
     }
-
 
 
     private fun setNextSong() {
