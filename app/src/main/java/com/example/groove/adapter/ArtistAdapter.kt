@@ -14,9 +14,7 @@ import com.example.groove.model.Song
 
 class ArtistAdapter : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
 
-    init {
-        Log.d("CHECK", "@ArtistAdapter Created")
-    }
+    var onItemClick: ((String) -> Unit)? = null
 
     class ArtistViewHolder(val binding : ItemArtistBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -59,6 +57,10 @@ class ArtistAdapter : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
         holder.binding.apply{
             artistTitle.text = currentArtist[0].artist
 
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick!!.invoke(currentArtist[0].artist)
         }
 
     }

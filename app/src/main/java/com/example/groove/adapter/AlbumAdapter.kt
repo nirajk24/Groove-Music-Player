@@ -13,6 +13,8 @@ import com.example.groove.model.Song
 
 class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
+    var onItemClick: ((String) -> Unit)? = null
+
     class AlbumViewHolder(val binding : ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root)
 
     private val diffUtil = object: DiffUtil.ItemCallback<ArrayList<Song>>() {
@@ -53,7 +55,10 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
         holder.binding.apply{
             albumTitle.text = currentAlbum[0].album
+        }
 
+        holder.itemView.setOnClickListener {
+            onItemClick!!.invoke(currentAlbum[0].album)
         }
 
     }

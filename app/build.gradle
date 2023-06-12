@@ -99,4 +99,11 @@ dependencies {
     // Share media contents and controls with other apps
     implementation "androidx.media:media:1.6.0"
 
+
+    def fragment_version = "1.6.0"
+    // Kotlin
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    // Testing Fragments in Isolation
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
 }

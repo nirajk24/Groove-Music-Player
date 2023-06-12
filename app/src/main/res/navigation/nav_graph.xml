@@ -13,7 +13,11 @@
         android:id="@+id/albumsFragment"
         android:name="com.example.groove.fragments.song_tabs.AlbumsFragment"
         android:label="fragment_album"
-        tools:layout="@layout/fragment_albums" />
+        tools:layout="@layout/fragment_albums" >
+        <action
+            android:id="@+id/action_albumsFragment_to_albumSongsFragment"
+            app:destination="@id/albumSongsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.example.groove.fragments.bottom_nav.PlaylistsFragment"
@@ -23,7 +27,11 @@
         android:id="@+id/artistsFragment"
         android:name="com.example.groove.fragments.song_tabs.ArtistsFragment"
         android:label="fragment_artist"
-        tools:layout="@layout/fragment_artists" />
+        tools:layout="@layout/fragment_artists" >
+        <action
+            android:id="@+id/action_artistsFragment_to_artistSongsFragment"
+            app:destination="@id/artistSongsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mainSongsFragment"
         android:name="com.example.groove.fragments.bottom_nav.MainSongsFragment"
@@ -39,4 +47,14 @@
         android:name="com.example.groove.fragments.bottom_nav.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/albumSongsFragment"
+        android:name="com.example.groove.fragments.song_tabs.AlbumSongsFragment"
+        android:label="fragment_album_songs"
+        tools:layout="@layout/fragment_album_songs" />
+    <fragment
+        android:id="@+id/artistSongsFragment"
+        android:name="com.example.groove.fragments.song_tabs.ArtistSongsFragment"
+        android:label="fragment_artist_songs"
+        tools:layout="@layout/fragment_artist_songs" />
 </navigation>

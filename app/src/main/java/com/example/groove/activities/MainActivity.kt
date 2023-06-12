@@ -27,6 +27,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -46,8 +47,12 @@ import com.example.groove.ApplicationClass.Companion.PREVIOUS
 import com.example.groove.MusicService
 import com.example.groove.NotificationReceiver
 import com.example.groove.R
+import com.example.groove.adapter.AlbumAdapter
+import com.example.groove.adapter.ArtistAdapter
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
+import com.example.groove.fragments.song_tabs.AlbumSongsFragment
+import com.example.groove.fragments.song_tabs.ArtistSongsFragment
 import com.example.groove.repository.SongRepository
 import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
@@ -114,7 +119,11 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
         initiateBottomPlayerLayout()
         setUpBottomPlayerLayout()
+        manageBottomNavigation()
+
         clickListener()
+
+
 
 
         playCurrentPlaylist()
@@ -175,16 +184,13 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         stopService(serviceIntent)
         serviceIntent.putExtra("AudioLink", link)
 
-        if(musicService != null){    /// -----> FIX
+        if (musicService != null) {    /// -----> FIX
             musicService!!.showNotification(R.drawable.ic_pause)
         }
         try {
             startService(serviceIntent)
             playerViewModel.isPlaying.value = true
             bindService(serviceIntent, this, BIND_AUTO_CREATE)
-
-
-
 
 
         } catch (e: SecurityException) {
@@ -285,9 +291,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
 
         val imgArt = getImageArt(playerViewModel.currentSong.value!!.path)
-        val thumb = if(imgArt != null){
+        val thumb = if (imgArt != null) {
             BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
-        }else{
+        } else {
             BitmapFactory.decodeResource(resources, R.drawable.music_icon)
         }
 
@@ -299,8 +305,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
             .addAction(R.drawable.ic_previous, "Previous", prevPending)
             .addAction(playPauseBtn, "Pause", playPausePending)
             .addAction(R.drawable.ic_next, "Next", nextPending)
-            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                .setMediaSession(mediaSessionCompat.sessionToken))
+            .setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setMediaSession(mediaSessionCompat.sessionToken)
+            )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
@@ -714,5 +722,17 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         }
     }
 
+
+
+    private fun manageBottomNavigation() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.albumSongsFragment) {
+                binding.btmNav.visibility = View.GONE
+            } else {
+                binding.btmNav.visibility = View.VISIBLE
+            }
+        }
+
+    }
 
 }

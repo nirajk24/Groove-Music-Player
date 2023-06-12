@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.add
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.groove.R
@@ -13,6 +17,7 @@ import com.example.groove.activities.MainActivity
 import com.example.groove.adapter.AlbumAdapter
 import com.example.groove.databinding.FragmentAlbumsBinding
 import com.example.groove.viewmodel.MainSongViewModel
+import com.example.groove.viewmodel.PlayerViewModel
 
 class AlbumsFragment : Fragment(R.layout.fragment_albums) {
 
@@ -34,11 +39,38 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
     ): View {
         binding = FragmentAlbumsBinding.inflate(inflater, container, false)
 
-        prepareAlbumRecyclerView()
-        observeAlbumHashMapLiveData()
 
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        prepareAlbumRecyclerView()
+        observeAlbumHashMapLiveData()
+
+        onAlbumItemClick()
+
+    }
+
+
+    private fun onAlbumItemClick() {
+        albumAdapter.onItemClick = { albumTitle ->
+            Log.d("ALBUM", "Passing Album ".plus(albumTitle))
+            val mFrag: Fragment = AlbumSongsFragment.newInstance(albumTitle)
+            replaceFragment(mFrag)
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+
+
 
 
     private fun prepareAlbumRecyclerView() {

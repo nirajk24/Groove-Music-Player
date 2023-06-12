@@ -37,7 +37,7 @@ class MainSongViewModel(val mainViewModel : MainViewModel) : ViewModel() {
             }
         }
         albumHashMapLiveData.value = albumHashMap
-        Log.d("CHECK", "@MainSongViewModel AlbumHashMap".plus(albumHashMapLiveData.value.toString()))
+        Log.d("ALBUM", "@MainSongViewModel AlbumHashMap".plus(albumHashMapLiveData.value.toString()))
 
     }
 
