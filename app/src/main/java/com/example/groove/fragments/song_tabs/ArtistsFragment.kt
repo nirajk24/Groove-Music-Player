@@ -34,10 +34,16 @@ class ArtistsFragment : Fragment(R.layout.fragment_artists) {
     ): View {
         binding = FragmentArtistsBinding.inflate(inflater, container, false)
 
-        prepareArtistsRecyclerView()
-        observeArtistHashMapLiveData()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        prepareArtistsRecyclerView()
+        observeArtistHashMapLiveData()
+        onArtistItemClick()
     }
 
 
@@ -57,6 +63,21 @@ class ArtistsFragment : Fragment(R.layout.fragment_artists) {
 
             artistAdapter.differ.submitList(it.values.toList())
         })
+    }
+
+    private fun onArtistItemClick() {
+        artistAdapter.onItemClick = { artistTitle ->
+            val mFrag: Fragment = ArtistSongsFragment.newInstance(artistTitle)
+            replaceFragment(mFrag)
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment_container, fragment)
+        transaction.addToBackStack(null)
+
+        transaction.commit()
     }
 
 

@@ -45,6 +45,6 @@
     </style>
 
     <style name="drawable_tint">
-        <item name="android:drawableTint">@color/text_secondary_dark</item>
+        <item name="tint">@color/text_secondary_dark</item>
     </style>
 </resources>
