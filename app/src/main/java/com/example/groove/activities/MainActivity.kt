@@ -27,7 +27,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -40,19 +39,15 @@ import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.groove.ApplicationClass.Companion.CHANNEL_ID_2
-import com.example.groove.ApplicationClass.Companion.PAUSE
-import com.example.groove.ApplicationClass.Companion.PLAY
-import com.example.groove.ApplicationClass.Companion.PREVIOUS
-import com.example.groove.MusicService
-import com.example.groove.NotificationReceiver
+import com.example.groove.application.ApplicationClass.Companion.CHANNEL_ID_2
+import com.example.groove.application.ApplicationClass.Companion.PAUSE
+import com.example.groove.application.ApplicationClass.Companion.PLAY
+import com.example.groove.application.ApplicationClass.Companion.PREVIOUS
+import com.example.groove.service.MusicService
+import com.example.groove.notification.NotificationReceiver
 import com.example.groove.R
-import com.example.groove.adapter.AlbumAdapter
-import com.example.groove.adapter.ArtistAdapter
 import com.example.groove.databinding.ActivityMainBinding
 import com.example.groove.db.SongDatabase
-import com.example.groove.fragments.song_tabs.AlbumSongsFragment
-import com.example.groove.fragments.song_tabs.ArtistSongsFragment
 import com.example.groove.repository.SongRepository
 import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
@@ -64,6 +59,7 @@ import com.example.groove.viewmodel.PlayerViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity(), ServiceConnection {
 
@@ -107,6 +103,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // If a user deny a permission 2 times then it's permanent denied
         // (only way to enable now is through app settings)
         requestRuntimePermission()
@@ -133,6 +130,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
 
     }
+
 
 
     // <----- Service Starts ---->
@@ -172,6 +170,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         playerViewModel.currentSong.observeForever(Observer {
             playAudio(playerViewModel.currentSong.value!!.path)
 
+
+            musicService?.showNotification(R.drawable.ic_pause)
 
             Log.d("PLAYBACK", "currentSong changed - will call initialise seekbar")
             initialiseSeekbar()
@@ -378,9 +378,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         if (playerViewModel.isPlaying.value == true) {
             playerViewModel.isPlaying.value = false
             musicService!!.pauseSong()
+            musicService?.showNotification(R.drawable.ic_play)
+
         } else {
             playerViewModel.isPlaying.value = true
             musicService!!.playSong()
+            musicService?.showNotification(R.drawable.ic_pause)
         }
     }
 
@@ -735,4 +738,14 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
     }
 
+    fun showUpButton() {
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.nav_host_fragment_container)
+//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+//
+//
+//    }
 }

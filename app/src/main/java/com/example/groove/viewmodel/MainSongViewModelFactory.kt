@@ -7,7 +7,7 @@ class MainSongViewModelFactory(private val mainViewModel: MainViewModel)
     :ViewModelProvider.Factory{
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainSongViewModel(mainViewModel) as T
+        return MainSongViewModel() as T
     }
 
 

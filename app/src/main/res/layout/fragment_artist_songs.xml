@@ -10,8 +10,9 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:backgroundTint="@color/accent_light">
+        android:layout_height="330dp"
+        android:background="#269E83EB"
+        >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -19,7 +20,8 @@
             android:layout_height="match_parent"
             app:collapsedTitleTextColor="@color/white"
             app:contentScrim="@color/accent_light"
-            app:expandedTitleTextColor="@color/white"
+            app:expandedTitleTextAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            app:expandedTitleTextColor="@color/accent_light"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             tools:title="Album Name">
 
@@ -34,12 +36,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:background="@drawable/header_gradient"
                 android:layout_gravity="bottom" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                app:menu="@menu/top_app_bar_menu"
+
                 app:layout_collapseMode="pin" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -64,18 +69,27 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPlayAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="8dp"
-                    android:backgroundTint="@color/accent_light"
+                    android:layout_marginVertical="12dp"
+                    android:background="@drawable/button_background"
+                    android:text="Play All"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_main_dark"
                     android:layout_weight="1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnShuffle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginVertical="8dp"
+                    android:text="Shuffle"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_main_dark"
+                    android:background="@drawable/button_background"
+                    android:layout_marginVertical="12dp"
                     android:layout_weight="1" />
 
             </LinearLayout>

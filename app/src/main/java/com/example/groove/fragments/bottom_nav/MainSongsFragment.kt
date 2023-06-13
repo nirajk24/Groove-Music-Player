@@ -30,8 +30,8 @@ class MainSongsFragment : Fragment(R.layout.fragment_main_songs) {
         super.onCreate(savedInstanceState)
 
         // Animation for entering
-        val inflater = TransitionInflater.from(requireContext())
-        enterTransition = inflater.inflateTransition(R.transition.fade)
+//        val inflater = TransitionInflater.from(requireContext())
+//        enterTransition = inflater.inflateTransition(R.transition.fade)
 
         mainViewModel = (activity as MainActivity).mainViewModel
     }
@@ -55,9 +55,6 @@ class MainSongsFragment : Fragment(R.layout.fragment_main_songs) {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabsArray[position]
         }.attach()
-
-
-
 
     }
 

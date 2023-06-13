@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.groove.R
 import com.example.groove.activities.MainActivity
 import com.example.groove.adapter.SongAdapter
@@ -37,12 +40,14 @@ class AlbumSongsFragment : Fragment(R.layout.fragment_album_songs) {
         arguments?.let {
             albumTitle = it.getString(ALBUM_TITLE)
             Log.d("ALBUM", albumTitle.toString())
-
-
-            val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.btm_nav)
-            navBar.visibility = View.GONE
         }
+
+
+
+//        activity?.supportFragmentManager?.addOnBackStackChangedListener(FragmentManager.OnBackStackChangedListener {  })
     }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -51,17 +56,8 @@ class AlbumSongsFragment : Fragment(R.layout.fragment_album_songs) {
         mainSongViewModel = (activity as MainActivity).mainSongViewModel
         playerViewModel = (activity as MainActivity).playerViewModel
 
+
         return binding.root
-    }
-
-    companion object {
-
-        @JvmStatic fun newInstance(param1: String) =
-                AlbumSongsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ALBUM_TITLE, param1)
-                    }
-                }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +66,18 @@ class AlbumSongsFragment : Fragment(R.layout.fragment_album_songs) {
         prepareRecyclerView()
         setAlbumSongs()
 
+        setHeaderDetails()
+
         onAlbumSongItemClick()
+    }
+
+    private fun setHeaderDetails() {
+        Glide.with(this)
+            .load(albumSongs?.get(0)?.artUri)
+            .apply(RequestOptions().placeholder(R.drawable.ic_song_cover).centerInside())
+            .into(binding.imgAlbum)
+
+        binding.collapsingToolbar.title = albumTitle
     }
 
 
@@ -95,19 +102,40 @@ class AlbumSongsFragment : Fragment(R.layout.fragment_album_songs) {
         Log.d("ALBUM", albumSongs.toString())
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.btm_nav)
-        navBar.visibility = View.VISIBLE
-    }
 
     private fun onAlbumSongItemClick() {
         albumSongsAdapter.onItemClick = { song, playlist, position ->
             playerViewModel.currentPlaylist.value = playlist
             playerViewModel.currentPosition.value = position
-//
 
         }
     }
+
+
+    companion object {
+        @JvmStatic fun newInstance(param1: String) =
+            AlbumSongsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ALBUM_TITLE, param1)
+                }
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.btm_nav)
+        navBar.visibility = View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().findViewById<BottomNavigationView>(R.id.btm_nav)?.let{ navBar ->
+            if(navBar.visibility == View.VISIBLE){
+                navBar.visibility = View.GONE
+            }
+        }
+    }
+
 }
