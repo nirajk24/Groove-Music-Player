@@ -1,8 +1,11 @@
 package com.example.groove.util
 
+import com.example.groove.viewmodel.MainSongViewModel
 import java.util.concurrent.TimeUnit
 
 class utility {
+
+    private lateinit var mainSongViewModel: MainSongViewModel
 
     companion object{
         fun formatDuration(duration: Long):String{
@@ -12,5 +15,7 @@ class utility {
             return String.format("%02d:%02d", minutes, seconds)
         }
     }
+
+
 
 }

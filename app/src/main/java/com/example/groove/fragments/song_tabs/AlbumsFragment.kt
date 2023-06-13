@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.groove.R
@@ -29,8 +30,6 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mainSongViewModel = (activity as MainActivity).mainSongViewModel
-
     }
 
     override fun onCreateView(
@@ -39,6 +38,7 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
     ): View {
         binding = FragmentAlbumsBinding.inflate(inflater, container, false)
 
+        mainSongViewModel = (activity as MainActivity).mainSongViewModel
 
         return binding.root
     }
@@ -52,23 +52,6 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
         onAlbumItemClick()
 
     }
-
-
-    private fun onAlbumItemClick() {
-        albumAdapter.onItemClick = { albumTitle ->
-            Log.d("ALBUM", "Passing Album ".plus(albumTitle))
-            val mFrag: Fragment = AlbumSongsFragment.newInstance(albumTitle)
-            replaceFragment(mFrag)
-        }
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
 
 
 
@@ -90,4 +73,30 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
 
         })
     }
+
+    private fun onAlbumItemClick() {
+        albumAdapter.onItemClick = { albumTitle ->
+            Log.d("ALBUM", "Passing Album ".plus(albumTitle))
+            val mFrag: Fragment = AlbumSongsFragment.newInstance(albumTitle)
+            replaceFragment(mFrag)
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.commit {
+
+//            setCustomAnimations(
+//                R.anim.slide_up,  // -> enter
+//                R.anim.fade_out,  // -> exit
+//                R.anim.fade_in,  // -> pop enter
+//                R.anim.slide_down  // -> pop exit
+//            )
+
+            replace(R.id.nav_host_fragment_container, fragment)
+            addToBackStack(null)
+        }
+    }
+
+
+
 }

@@ -80,6 +80,7 @@ class MainViewModel(
                                 .toString()
                         val artistIdC =
                             cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
+                        val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
 
 //                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
 //                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
@@ -96,7 +97,8 @@ class MainViewModel(
                             artist = artistC,
                             path = pathC,
                             duration = durationC,
-                            artUri = artUriC
+                            artUri = artUriC,
+                            dateAdded = dateAddedC
                         )
                         val file = File(song.path)
                         if (file.exists())

@@ -1,11 +1,13 @@
 package com.example.groove.model
 
+import android.os.Build.VERSION
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @Entity(tableName = "songs")
@@ -26,7 +28,9 @@ data class Song(
     @ColumnInfo(name = "path")
     val path: String,
     @ColumnInfo(name = "artUri")
-    val artUri: String
+    val artUri: String,
+
+    val dateAdded : String,
 ) : Parcelable
 
 
