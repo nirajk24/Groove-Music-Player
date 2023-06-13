@@ -34,6 +34,11 @@ class PrefRepository(val context: Context) {
         editor.commit()
     }
 
+    private fun String.put(songTitleSet : Set<String>){
+        editor.putStringSet(this, songTitleSet)
+        editor.apply()
+    }
+
     private fun String.getLong() = pref.getLong(this, 0)
 
     private fun String.getInt() = pref.getInt(this, 0)

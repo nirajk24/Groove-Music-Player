@@ -1,6 +1,5 @@
-package com.example.groove
+package com.example.groove.service
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -9,20 +8,15 @@ import android.media.AudioManager
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
+import com.example.groove.application.ApplicationClass
+import com.example.groove.notification.NotificationReceiver
+import com.example.groove.R
 import com.example.groove.activities.MainActivity
-import com.example.groove.db.SongDatabase
-import com.example.groove.repository.SongRepository
-import com.example.groove.viewmodel.MainViewModelFactory
-import com.example.groove.viewmodel.PlayerViewModel
-import com.example.groove.viewmodel.PlayerViewModelFactory
 import java.lang.Exception
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener,

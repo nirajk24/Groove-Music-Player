@@ -1,4 +1,4 @@
-package com.example.groove
+package com.example.groove.application
 
 import android.app.Application
 import android.app.Notification
