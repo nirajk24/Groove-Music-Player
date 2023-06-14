@@ -8,4 +8,8 @@
     <string name="artists">Artists</string>
     <string name="albums">Albums</string>
     <string name="profile">Profile</string>
+    <string name="history">History</string>
+    <string name="last_added">Last added</string>
+    <string name="Shuffle">Shuffle</string>
+    <string name="most_played">Most played</string>
 </resources>

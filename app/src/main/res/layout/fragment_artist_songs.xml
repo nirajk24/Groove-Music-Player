@@ -19,9 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleTextColor="@color/white"
-            app:contentScrim="@color/accent_light"
+            app:contentScrim="@color/accent"
             app:expandedTitleTextAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            app:expandedTitleTextColor="@color/accent_light"
+            app:expandedTitleTextColor="@color/accent"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             tools:title="Album Name">
 

@@ -11,14 +11,14 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:backgroundTint="@color/accent_light">
+        android:backgroundTint="@color/accent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleTextColor="@color/white"
-            app:contentScrim="@color/accent_light"
+            app:contentScrim="@color/accent"
             app:expandedTitleTextColor="@color/white"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             tools:title="Album Name">
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="8dp"
-                    android:backgroundTint="@color/accent_light"
+                    android:backgroundTint="@color/accent"
                     android:layout_weight="1" />
 
                 <Button

@@ -7,15 +7,17 @@
     <color name="primary_light">#EAEAEA</color>
     <color name="primary_dark">#131313</color>
 
-    <color name="accent_light">#9E83EB</color>
-    <color name="accent_dark">#9E83EB</color>
+    <color name="accent">#9E83EB</color>
+<!--    <color name="accent_dark">#9E83EB</color>-->
 
     <color name="accent_50">#809E83EB</color>
-    <color name="accent_40">#669E83EB</color>
     <color name="accent_30">#4D9E83EB</color>
-    <color name="accent_20">#339E83EB</color>
     <color name="accent_15">#269E83EB</color>
 
+
+<!--    <color name="accent_dark_50">#809E83EB</color>-->
+<!--    <color name="accent_dark_30">#4D9E83EB</color>-->
+<!--    <color name="accent_dark_15">#269E83EB</color>-->
 
 
 
