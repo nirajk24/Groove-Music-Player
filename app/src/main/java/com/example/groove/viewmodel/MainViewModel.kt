@@ -11,13 +11,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.groove.model.Playlist
 import com.example.groove.model.Song
+import com.example.groove.repository.PlaylistRepository
 import com.example.groove.repository.SongRepository
 import kotlinx.coroutines.launch
 import java.io.File
 
 class MainViewModel(
-    private val songRepository: SongRepository,
+    private val playlistRepository: PlaylistRepository,
     private val application: Application
 ) : AndroidViewModel(application) {
 
@@ -36,11 +38,22 @@ class MainViewModel(
         return allSongsLiveDataMap
     }
 
+    private var allPlaylistLiveData = MutableLiveData<List<Playlist>>()
+    fun observeAllPlaylistLiveData() = allPlaylistLiveData
+
+    fun setPlaylist(){
+        val allPlaylist: List<Playlist> = playlistRepository.getAllPlaylists()
+        allPlaylistLiveData.value = allPlaylist
+    }
+
+
+
+
 
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
-    suspend fun scanForSongs(){
-        viewModelScope.launch{
+    suspend fun scanForSongs() {
+        viewModelScope.launch {
             val tempHashMap = HashMap<String, Song>()
             val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
             val projection = arrayOf(
@@ -64,15 +77,17 @@ class MainViewModel(
                         val titleC =
                             cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
                                 ?: "Unknown"
-                        val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
-                            ?: "Unknown"
+                        val idC =
+                            cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
+                                ?: "Unknown"
                         val albumC =
                             cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM))
                                 ?: "Unknown"
                         val artistC =
                             cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                                 ?: "Unknown"
-                        val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                        val pathC =
+                            cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                         val durationC =
                             cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
                         val albumIdC =
@@ -80,7 +95,8 @@ class MainViewModel(
                                 .toString()
                         val artistIdC =
                             cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID))
-                        val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
+                        val dateAddedC =
+                            cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
 
 //                    val bitrateC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BITRATE))
 //                    val dateAddedC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
@@ -101,8 +117,10 @@ class MainViewModel(
                             dateAdded = dateAddedC
                         )
                         val file = File(song.path)
-                        if (file.exists())
+                        if (file.exists()) {
                             tempHashMap[titleC] = song
+                            Log.d("HASHMAP", tempHashMap.toString())
+                        }
                     } while (cursor.moveToNext())
                 cursor.close()
             }
@@ -110,6 +128,8 @@ class MainViewModel(
             allSongsLiveDataMap.value = tempHashMap
         }
     }
+
+
 }
 
 

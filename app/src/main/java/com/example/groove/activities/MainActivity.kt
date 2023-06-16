@@ -47,7 +47,8 @@ import com.example.groove.service.MusicService
 import com.example.groove.notification.NotificationReceiver
 import com.example.groove.R
 import com.example.groove.databinding.ActivityMainBinding
-import com.example.groove.db.SongDatabase
+import com.example.groove.db.PlaylistDatabase
+import com.example.groove.repository.PlaylistRepository
 import com.example.groove.repository.SongRepository
 import com.example.groove.util.utility
 import com.example.groove.viewmodel.MainSongViewModel
@@ -79,8 +80,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
     // <----- ViewModel Starts ---->
     val mainViewModel: MainViewModel by lazy {
-        val songRepository = SongRepository(SongDatabase.getInstance(this))
-        val mainViewModelFactory = MainViewModelFactory(songRepository, application)
+        val songRepository = SongRepository(PlaylistDatabase.getInstance(this))
+        val playlistRepository = PlaylistRepository(PlaylistDatabase.getInstance(this))
+        val mainViewModelFactory = MainViewModelFactory(playlistRepository, application)
         ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
     }
 
@@ -504,6 +506,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         }
         lifecycleScope.launch {
             mainViewModel.scanForSongs()
+            mainViewModel.setPlaylist()
         }
         return true
     }
@@ -520,6 +523,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch {
                     mainViewModel.scanForSongs()
+                    mainViewModel.setPlaylist()
                 }
             } else
 //                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
@@ -722,6 +726,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
         lifecycleScope.launch {
             mainViewModel.scanForSongs()
+            mainViewModel.setPlaylist()
         }
     }
 

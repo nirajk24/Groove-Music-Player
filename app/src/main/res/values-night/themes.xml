@@ -24,7 +24,7 @@
     </style>
 
     <style name="tab_layout_style">
-        <item name="tabIndicatorColor">@color/accent_dark</item>
+        <item name="tabIndicatorColor">@color/accent</item>
         <item name="tabBackground">@color/primary_dark</item>
         <item name="tabTextColor">@color/text_main_dark</item>
     </style>
@@ -32,7 +32,7 @@
     <!--    Bottom Navigation Bar Icon, Text Color and Ripple-->
     <style name="bottom_navigation_bar">
         <item name="itemIconTint">@color/text_secondary_dark</item>
-        <item name="itemTextColor">@color/accent_dark</item>
+        <item name="itemTextColor">@color/accent</item>
         <item name="itemRippleColor">@color/background_dark</item>
         <item name="backgroundTint">@color/primary_dark</item>
     </style>

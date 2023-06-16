@@ -76,7 +76,6 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
 
     private fun onAlbumItemClick() {
         albumAdapter.onItemClick = { albumTitle ->
-            Log.d("ALBUM", "Passing Album ".plus(albumTitle))
             val mFrag: Fragment = AlbumSongsFragment.newInstance(albumTitle)
             replaceFragment(mFrag)
         }
