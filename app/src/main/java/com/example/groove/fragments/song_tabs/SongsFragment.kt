@@ -85,7 +85,7 @@ class SongsFragment : Fragment(R.layout.fragment_songs) {
 
 
     private fun prepareSongsRecyclerView() {
-        songAdapter = SongAdapter()
+        songAdapter = SongAdapter(requireContext())
         binding.rvSongs.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = songAdapter

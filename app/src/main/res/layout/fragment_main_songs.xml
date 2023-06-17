@@ -51,5 +51,18 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabShuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/margin_big"
+        android:layout_marginBottom="@dimen/margin_big"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_shuffle"
+        app:backgroundTint="@color/accent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="TODO" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -70,11 +70,11 @@
 
     <ImageView
         android:id="@+id/btnMenu"
-        android:layout_width="18dp"
-        android:layout_height="20dp"
+        android:layout_width="20dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_more_vert"
         style="@style/drawable_tint"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -16,11 +16,11 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>
     private val diffUtil = object : DiffUtil.ItemCallback<Playlist>() {
 
         override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
-            TODO("Not yet implemented")
+            return oldItem.title == newItem.title
         }
 
         override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
-            TODO("Not yet implemented")
+            return oldItem == newItem
         }
     }
 

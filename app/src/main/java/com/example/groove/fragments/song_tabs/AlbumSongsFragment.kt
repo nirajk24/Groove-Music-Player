@@ -83,7 +83,7 @@ class AlbumSongsFragment : Fragment(R.layout.fragment_album_songs) {
 
 
     private fun prepareRecyclerView() {
-        albumSongsAdapter = SongAdapter()
+        albumSongsAdapter = SongAdapter(requireContext())
         binding.rvAlbumSongs.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = albumSongsAdapter

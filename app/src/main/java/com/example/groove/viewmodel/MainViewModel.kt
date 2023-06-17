@@ -15,6 +15,7 @@ import com.example.groove.model.Playlist
 import com.example.groove.model.Song
 import com.example.groove.repository.PlaylistRepository
 import com.example.groove.repository.SongRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -41,13 +42,19 @@ class MainViewModel(
     private var allPlaylistLiveData = MutableLiveData<List<Playlist>>()
     fun observeAllPlaylistLiveData() = allPlaylistLiveData
 
-    fun setPlaylist(){
-        val allPlaylist: List<Playlist> = playlistRepository.getAllPlaylists()
-        allPlaylistLiveData.value = allPlaylist
+    fun setPlaylist() {
+        var allPlaylist: List<Playlist> = listOf<Playlist>()
+        val job = viewModelScope.launch(Dispatchers.IO) {
+            allPlaylist = playlistRepository.getAllPlaylists()
+        }
+
+        // Wait for the viewModelScope to finish before proceeding
+        viewModelScope.launch {
+            job.join()
+            // Update the LiveData with the fetched playlist
+            allPlaylistLiveData.value = allPlaylist
+        }
     }
-
-
-
 
 
     @SuppressLint("Recycle", "Range")
