@@ -1,12 +1,9 @@
 # Groove: Your Offline Music Companion 🎶
 
-Welcome to Groove, your ultimate offline music player for Android! Dive into a harmonious world of melodies and rhythms with our intuitive and feature-rich app. Whether you're on a road trip, relaxing at home, or just commuting to work, Groove ensures that your music is always with you, even when you're offline.
+<img src="Screenshots/play1.gif" align="right" width="300"/>
 
-<div align="right">
-  <a href="https://link-to-your-video">
-    <img src="https://link-to-your-thumbnail" alt="Watch the video" width="300">
-  </a>
-</div>
+ Welcome to Groove
+  <p>Your ultimate offline music player for Android! Dive into a harmonious world of melodies and rhythms with our intuitive and feature-rich app. Whether you're on a road trip, relaxing at home, or just commuting to work, Groove ensures that your music is always with you, even when you're offline.</p>
 
 ## Features 🌟
 
