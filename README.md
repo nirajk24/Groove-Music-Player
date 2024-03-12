@@ -25,20 +25,20 @@ Welcome to Groove, your ultimate offline music player for Android! Dive into a h
 
 ### Light Mode
 <div>
-  <img src="/Screenshots/WSS1.jpg" alt="Light Mode 1" width="170" />
-  <img src="/Screenshots/WSS5.jpg" alt="Light Mode 2" width="170" />
-  <img src="/Screenshots/WSS2.jpg" alt="Light Mode 3" width="170" />
-  <img src="/Screenshots/WSS3.jpg" alt="Light Mode 4" width="170" />
-  <img src="/Screenshots/WSS4.jpg" alt="Light Mode 5" width="170" />
+  <img src="/Screenshots/WSS1.jpg" alt="Light Mode 1" width="160" />
+  <img src="/Screenshots/WSS5.jpg" alt="Light Mode 2" width="160" />
+  <img src="/Screenshots/WSS2.jpg" alt="Light Mode 3" width="160" />
+  <img src="/Screenshots/WSS3.jpg" alt="Light Mode 4" width="160" />
+  <img src="/Screenshots/WSS4.jpg" alt="Light Mode 5" width="160" />
 </div>
 
 ### Dark Mode
 <div>
-  <img src="/Screenshots/SS1.jpg" alt="Dark Mode 1" width="170" />
-  <img src="/Screenshots/SS5.jpg" alt="Dark Mode 2" width="170" />
-  <img src="/Screenshots/SS2.jpg" alt="Dark Mode 3" width="170" />
-  <img src="/Screenshots/SS3.jpg" alt="Dark Mode 4" width="170" />
-  <img src="/Screenshots/SS4.jpg" alt="Dark Mode 5" width="170" />
+  <img src="/Screenshots/SS1.jpg" alt="Dark Mode 1" width="160" />
+  <img src="/Screenshots/SS5.jpg" alt="Dark Mode 2" width="160" />
+  <img src="/Screenshots/SS2.jpg" alt="Dark Mode 3" width="160" />
+  <img src="/Screenshots/SS3.jpg" alt="Dark Mode 4" width="160" />
+  <img src="/Screenshots/SS4.jpg" alt="Dark Mode 5" width="160" />
 </div>
 
 
@@ -55,9 +55,6 @@ Ready to embark on a musical journey with Groove? Follow these simple steps to g
 
 Join us in enhancing the Groove experience! Whether you have bug fixes, feature enhancements, or new ideas, we welcome contributions from the community. Simply open an issue or submit a pull request, and let's make Groove even better together!
 
-## License 📝
-
-Groove is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as per your needs.
 
 ## Acknowledgments 🙏
 
